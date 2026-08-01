@@ -44,4 +44,4 @@ SDK 支持无分配的单文件 C 和受限 C++ 服务，ABI 由 `service-toolch
 
 当前开发基线包含具体的编译输出和 artifact 格式。这些命令只验证 Service SDK 示例，不构建完整 MiniJAM Node、Runtime 或 Stage 0 Stack。Service HostCall 语义来自当前固定的 Jambda/JAM 执行实现。
 
-如需运行完整环境，请继续阅读[使用 Docker 部署](../operators/docker-deployment.md)。
+如需运行完整环境，请继续阅读[使用 Docker 部署](https://github.com/ArcheLabs/minijam-client/blob/main/docs/docker-deployment.md)。

@@ -44,4 +44,4 @@ From the repository root:
 
 The exact compiler output and artifact format are part of the current Service SDK development baseline. These commands validate Service SDK examples; they do not build the complete MiniJAM Node, Runtime, or Stage 0 Stack. Service HostCall semantics come from the pinned Jambda/JAM execution implementation.
 
-To run the full environment, continue with [Docker deployment](../operators/docker-deployment.md).
+To run the full environment, continue with [Docker deployment](https://github.com/ArcheLabs/minijam-client/blob/main/docs/docker-deployment.md).
