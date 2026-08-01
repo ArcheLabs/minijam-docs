@@ -1,0 +1,7 @@
+{
+  "links.title.Documentation": {"message": "文档", "description": "Footer links title"},
+  "links.title.Project": {"message": "项目", "description": "Footer links title"},
+  "link.label.MiniJAM": {"message": "MiniJAM", "description": "Footer link label"},
+  "link.label.Incentive Protocol": {"message": "激励协议", "description": "Footer link label"},
+  "link.label.GitHub": {"message": "GitHub", "description": "Footer link label"}
+}

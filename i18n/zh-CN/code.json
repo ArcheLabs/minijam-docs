@@ -1,0 +1,5 @@
+{
+  "theme.docs.readMore": {"message": "继续阅读", "description": "The label used for reading more documentation"},
+  "theme.docs.sidebar.expandButtonTitle": {"message": "展开侧边栏", "description": "The ARIA label for expanding the sidebar"},
+  "theme.docs.sidebar.collapseButtonTitle": {"message": "折叠侧边栏", "description": "The ARIA label for collapsing the sidebar"}
+}

@@ -1,0 +1,6 @@
+{
+  "title": {"message": "MiniJAM", "description": "The navbar title"},
+  "item.label.Documentation": {"message": "文档", "description": "Navbar item label"},
+  "item.label.Incentive Protocol": {"message": "激励协议", "description": "Navbar item label"},
+  "item.label.GitHub": {"message": "GitHub", "description": "Navbar item label"}
+}

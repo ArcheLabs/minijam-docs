@@ -1,0 +1,2 @@
+:root {--ifm-font-family-base: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; --ifm-color-primary: #737cff; --ifm-color-primary-dark: #5963f5; --ifm-color-primary-darker: #4d57f3; --ifm-color-primary-light: #8d94ff; --ifm-color-primary-lighter: #999fff;}
+table {display: block; overflow-x: auto; width: 100%;} .theme-doc-markdown h1 {letter-spacing: -.02em;}
