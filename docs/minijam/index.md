@@ -1,14 +1,14 @@
 ---
 id: index
 title: MiniJAM
-description: Learn, use, build on, and run MiniJAM.
+description: Learn, use, build on, and run the independent MiniJAM Polkadot SDK chain.
 slug: /minijam
 sidebar_position: 1
 ---
 
 # MiniJAM
 
-MiniJAM is an experimental, JAM-inspired execution environment for developing and testing services.
+MiniJAM is an independent Polkadot SDK chain implementing a deliberately reduced JAM protocol surface, allowing developers to build and run JAM-style services today.
 
 Start with one of these paths:
 

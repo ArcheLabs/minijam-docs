@@ -6,17 +6,17 @@ import clsx from 'clsx';
 import styles from './index.module.css';
 
 const products = [
-  {name: 'MiniJAM', description: translate({message: 'A JAM-inspired execution environment for building and testing services before the full JAM network is available.'}), status: 'Active', to: '/docs/minijam'},
-  {name: 'Incentive Protocol', description: translate({message: 'A protocol for funding, launching, and incentivizing open projects.'}), status: 'Planned', to: '/docs/incentive-protocol'},
-  {name: 'MINI', description: translate({message: 'The economic system covering the Genesis Pool, MINI Lucky, and the MiniJAM ecosystem.'}), status: 'Planned', to: '/docs/mini'},
+  {name: translate({message: 'MiniJAM'}), description: translate({message: 'MiniJAM is an independent Polkadot SDK chain implementing a deliberately reduced JAM protocol surface, allowing developers to build and run JAM-style services today.'}), status: translate({message: 'Active'}), to: '/docs/minijam'},
+  {name: translate({message: 'Incentive Protocol'}), description: translate({message: 'A protocol for funding, launching, and incentivizing open projects.'}), status: translate({message: 'Planned'}), to: '/docs/incentive-protocol'},
+  {name: translate({message: 'MINI'}), description: translate({message: 'The economic system covering the Genesis Pool, MINI Lucky, and the MiniJAM ecosystem.'}), status: translate({message: 'Planned'}), to: '/docs/mini'},
 ];
 
 export default function Home(): React.ReactElement {
-  return <Layout title="MiniJAM Documentation" description="Documentation for the MiniJAM ecosystem.">
+  return <Layout title={translate({message: 'MiniJAM Documentation'})} description={translate({message: 'Documentation for the MiniJAM ecosystem.'})}>
     <main>
       <header className={styles.hero}>
         <div className="container">
-          <p className={styles.eyebrow}>MiniJAM</p>
+          <p className={styles.eyebrow}><Translate>MiniJAM</Translate></p>
           <h1><Translate>Documentation for the MiniJAM ecosystem</Translate></h1>
           <p><Translate>Build, run, and understand MiniJAM.</Translate></p>
           <div className={styles.buttons}>
@@ -26,8 +26,8 @@ export default function Home(): React.ReactElement {
         </div>
       </header>
       <section className={clsx('container', styles.products)}>
-        <div className={styles.grid}>{products.map((product) => <Link className={styles.card} to={product.to} key={product.name}>
-          <div className={styles.cardHeader}><h2>{product.name}</h2><span className={clsx(styles.status, product.status === 'Active' ? styles.active : styles.planned)}>{product.status === 'Active' ? <Translate>Active</Translate> : <Translate>Planned</Translate>}</span></div>
+          <div className={styles.grid}>{products.map((product) => <Link className={styles.card} to={product.to} key={product.name}>
+          <div className={styles.cardHeader}><h2>{product.name}</h2><span className={clsx(styles.status, product.status === translate({message: 'Active'}) ? styles.active : styles.planned)}>{product.status}</span></div>
           <p>{product.description}</p><span className={styles.arrow}>→</span>
         </Link>)}</div>
       </section>

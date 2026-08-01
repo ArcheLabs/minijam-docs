@@ -5,6 +5,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 const config: Config = {
   title: 'MiniJAM Documentation',
   tagline: 'Documentation for MiniJAM, the Incentive Protocol, and MINI.',
+  favicon: 'img/logo.svg',
   url: process.env.SITE_URL ?? 'https://docs.minijam.org',
   baseUrl: process.env.BASE_URL ?? '/',
   organizationName: 'ArcheLabs',
@@ -21,7 +22,13 @@ const config: Config = {
   },
   presets: [
     ['classic', {
-      docs: {routeBasePath: 'docs', sidebarPath: './sidebars.ts', breadcrumbs: true, showLastUpdateTime: true},
+      docs: {
+        routeBasePath: 'docs',
+        sidebarPath: './sidebars.ts',
+        breadcrumbs: true,
+        showLastUpdateTime: true,
+        editUrl: 'https://github.com/ArcheLabs/minijam-docs/edit/main/',
+      },
       blog: false,
       theme: {customCss: './src/css/custom.css'},
     } satisfies Preset.Options],
@@ -30,12 +37,14 @@ const config: Config = {
     colorMode: {defaultMode: 'dark', disableSwitch: false, respectPrefersColorScheme: true},
     navbar: {
       title: 'MiniJAM',
+      logo: {alt: 'MiniJAM', src: 'img/logo.svg'},
       items: [
         {type: 'doc', docId: 'index', label: 'Documentation', position: 'left'},
         {type: 'doc', docId: 'minijam/index', label: 'MiniJAM', position: 'left'},
         {type: 'doc', docId: 'incentive-protocol/index', label: 'Incentive Protocol', position: 'left'},
         {type: 'doc', docId: 'mini/index', label: 'MINI', position: 'left'},
-        {href: 'https://github.com/ArcheLabs', label: 'GitHub', position: 'right'},
+        {href: 'https://github.com/ArcheLabs/minijam-docs', label: 'Docs GitHub', position: 'right'},
+        {href: 'https://github.com/ArcheLabs/minijam-client', label: 'MiniJAM Client', position: 'right'},
         {type: 'localeDropdown', position: 'right'},
       ],
     },
@@ -47,10 +56,14 @@ const config: Config = {
           {label: 'Incentive Protocol', to: '/docs/incentive-protocol'},
           {label: 'MINI', to: '/docs/mini'},
         ]},
-        {title: 'Project', items: [{label: 'GitHub', href: 'https://github.com/ArcheLabs'}]},
+        {title: 'Project', items: [
+          {label: 'Documentation repository', href: 'https://github.com/ArcheLabs/minijam-docs'},
+          {label: 'MiniJAM Client', href: 'https://github.com/ArcheLabs/minijam-client'},
+        ]},
       ],
       copyright: `Copyright © ${new Date().getFullYear()} ArcheLabs. Built with Docusaurus.`,
     },
+    image: 'img/logo.svg',
     prism: {theme: prismThemes.github, darkTheme: prismThemes.dracula},
   } satisfies Preset.ThemeConfig,
 };

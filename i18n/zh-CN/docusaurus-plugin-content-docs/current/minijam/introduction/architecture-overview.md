@@ -7,6 +7,22 @@ sidebar_position: 3
 
 # 架构概览
 
-MiniJAM 连接服务程序、Worker、运行时和数据层。Worker 获取 Work Package 的输入，执行 Refine，并产生 Candidate 或 Work Report。独立 Worker 可以重新获取输入并重新执行计算，再提交 Support。Accumulate 随后将被接受的结果应用到链上状态。
+MiniJAM 是一条独立的 Polkadot SDK 链，由 Node、Runtime、Worker 集合、Bulletin-compatible 数据边界、Bridge 和状态处理组件组成。Playground API 还承担 Stage 0 的 bundle gateway。
 
-该架构是有明确范围的文档子集，不应理解为 JAM 网络或可用性机制的完整描述。
+当前 Work 生命周期是：
+
+```text
+提交 Work
+→ 确定性 Worker 分配
+→ 提交 ReportEnvelopeV1
+→ 锁定候选报告保证金
+→ 被分配的 Worker 进行 Support/Oppose 投票
+→ 被接受的报告进入执行队列
+→ Runtime 执行 Accumulate
+→ 原子状态更新
+→ 记录 receipt 和 effects
+```
+
+Worker 会重新获取声明的输入并独立验证报告，然后投票。Runtime 随后校验并规范化状态变化，再以原子方式应用。
+
+Stage 0 使用 `BulletinEvidence` 抽象、Bulletin-compatible simulator 和 Playground API bundle gateway。这不是 JAM availability，也不是直接接入正式 Bulletin Chain。

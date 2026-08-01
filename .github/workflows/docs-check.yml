@@ -1,5 +1,9 @@
 name: Docs Check
 on:
+  push:
+    branches:
+      - main
+    paths: [docs/**, i18n/**, src/**, static/**, scripts/**, docusaurus.config.ts, sidebars.ts, package.json, package-lock.json, tsconfig.json, .github/workflows/docs-check.yml]
   pull_request:
     paths: [docs/**, i18n/**, src/**, static/**, scripts/**, docusaurus.config.ts, sidebars.ts, package.json, package-lock.json, tsconfig.json, .github/workflows/docs-check.yml]
   workflow_dispatch:

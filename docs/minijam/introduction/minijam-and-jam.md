@@ -12,4 +12,8 @@ The complete first draft is currently available in Simplified Chinese. Use the l
 
 :::
 
-This page explains the relationship between MiniJAM and JAM, including their execution model, network architecture, availability assumptions, verification process, and compatibility boundaries. JAM's authoritative protocol definition is the relevant version of the Gray Paper. MiniJAM is an independent experimental project, not the JAM mainnet, and does not claim complete JAM protocol implementation.
+This page explains the relationship between MiniJAM and JAM, including their execution model, network architecture, availability assumptions, verification process, and compatibility boundaries. JAM's authoritative protocol definition is the relevant version of the [Gray Paper](https://graypaper.com/). MiniJAM is an independent Polkadot SDK chain, not the JAM mainnet, and does not claim complete JAM protocol implementation.
+
+The current implementation uses its own Aura block producers and GRANDPA finality participants. It does not inherit shared security from the Polkadot Relay Chain.
+
+The Stage 0 data boundary uses a Bulletin-compatible simulator and the Playground API bundle gateway. It does not implement JAM availability or directly depend on a production Bulletin Chain. The current protocol baseline is `PROTOCOL_VERSION_V1`, JamCore interface `1`, and Gray Paper semantics `0.7.2`.

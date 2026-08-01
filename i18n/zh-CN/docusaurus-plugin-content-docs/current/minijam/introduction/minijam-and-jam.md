@@ -8,7 +8,7 @@ sidebar_position: 4
 
 # MiniJAM 与 JAM
 
-JAM 是由 Gray Paper 定义的协议，其目标是为 Polkadot 提供一种新的基础执行与服务模型。MiniJAM 是一个独立的实验性项目，用于更早地开发、运行和验证受 JAM 启发的服务与开发工具。
+JAM 是由 [Gray Paper](https://graypaper.com/) 定义的协议，其目标是为 Polkadot 提供一种新的基础执行与服务模型。MiniJAM 是一条独立的 Polkadot SDK 链，用于更早地开发、运行和验证 JAM 风格的服务与开发工具。
 
 MiniJAM 不等同于 JAM 主网，也不宣称完整实现当前 Gray Paper 中定义的全部协议。两者共享部分核心概念，但运行环境、共识来源、数据可用性、工作报告验证和状态处理方式并不相同。
 
@@ -37,15 +37,17 @@ MiniJAM 的设计保留或借鉴了以下 JAM 概念：
 |---|---|---|
 | 定位 | 由 Gray Paper 定义的完整基础协议，并可作为 Polkadot 未来基础架构的一部分 | 用于早期开发、测试和运行 JAM 风格服务的独立实验性网络 |
 | 协议范围 | 定义验证者、核心分配、数据可用性、报告保障、争议处理、状态转换和网络行为 | 当前只实现产品目标所需的垂直切片，并主动省略或简化部分完整 JAM 流程 |
-| 共识与最终性 | 由 JAM 协议自身定义其验证者和链状态流程 | 当前依赖 Polkadot 及 MiniJAM 所在网络提供区块生产和最终性 |
+| 共识与最终性 | 由 JAM 协议自身定义其验证者和链状态流程 | 当前运行在独立的 Polkadot SDK 链上，由自身的 Aura 区块生产者和 GRANDPA 最终性参与者维护，不继承 Polkadot Relay Chain 的共享安全 |
 | 执行模型 | Refine 在核心计算环境中执行，Accumulate 参与全局状态转换 | 保留 Refine 与 Accumulate 的分工，但由 MiniJAM 的 Worker、验证流程和运行时完成 |
-| 数据可用性 | 使用 JAM 定义的数据可用性、分发和恢复机制 | 当前通过 Bulletin 数据层及相关外部数据发布机制简化处理，不实现完整 JAM availability 流程 |
-| 工作报告保障 | 使用 JAM 的 guarantor、审计、争议与判定流程 | 当前使用指定 Worker 生成 Candidate，并由独立 Worker 重新获取输入、重新执行 Refine 后提交 Support 或 Oppose |
+| 数据可用性 | 使用 JAM 定义的数据可用性、分发和恢复机制 | Stage 0 使用 Bulletin-compatible simulator 和 Playground API bundle gateway 实现当前所需的数据获取语义；未实现 JAM availability，也不是直接依赖正式 Bulletin Chain |
+| 工作报告保障 | 使用 JAM 的 guarantor、审计、争议与判定流程 | 当前使用确定性 Worker 分配、ReportEnvelopeV1、候选报告保证金，以及被分配 Worker 的 Support/Oppose 投票 |
 | Accumulate | 作为 JAM 协议全局状态转换的一部分 | 集成到 MiniJAM 的链上运行时和状态转换流程 |
-| 状态管理 | 遵循 Gray Paper 对 service state 和全局状态的定义 | 由 MiniJAM 的运行时及状态后端管理，具体表示和提交方式可能与完整 JAM 不同 |
+| 状态管理 | 遵循 Gray Paper 对 service state 和全局状态的定义 | 保留 JAM 的原始状态与状态转换逻辑，但部分当前未使用的状态始终保持默认值 |
 | Coretime 与资源市场 | 包含 JAM 的核心分配和资源使用模型 | 第一阶段不实现完整 JAM Coretime 市场和全部经济机制 |
-| 安全假设 | 依赖完整 JAM 协议中的验证、可用性和争议机制 | 同时依赖 Polkadot 安全性、MiniJAM Worker 验证规则、数据发布层和当前部署配置 |
+| 安全假设 | 依赖完整 JAM 协议中的验证、可用性和争议机制 | 当前安全性依赖 MiniJAM 的 Authority 集合、Worker 分配与投票规则、候选报告保证金、惩罚规则、数据获取边界和实际部署配置 |
 | 兼容性 | Gray Paper 是协议兼容性的权威标准 | 目标是逐步提高执行模型、工具和服务开发体验的兼容性，不承诺当前协议等价 |
+| 协议版本基线 | 取决于目标 Gray Paper 版本 | 当前 JamCore 语义基线为 Gray Paper 0.7.2，公共协议为 `PROTOCOL_VERSION_V1`，接口版本为 `1` |
+| Bridge | 不包含 MiniJAM 专用资产托管模型 | 当前包含原生资产 escrow、release、replay protection 和 Runtime bridge effects |
 
 ## MiniJAM 简化了什么
 
