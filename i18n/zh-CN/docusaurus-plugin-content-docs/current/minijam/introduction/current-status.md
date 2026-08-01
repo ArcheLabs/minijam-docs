@@ -38,22 +38,31 @@ Stage 0 包含一个 Node、Compiler API、Playground API、三个独立 Worker 
 | Candidate Worker | Available |
 | Independent Validator Workers | Available |
 | Docker Stage 0 部署 | Available |
-| Native 本地部署 | Available |
 | 生产网络 | Not available |
 | 完整 JAM availability | Not implemented |
 | JAM disputes and judgments | Not implemented |
+| 外部用户从公开源码构建完整 Stack | 不可用 |
+| 使用 digest 固定镜像的 Docker release 部署 | 支持 |
+| 托管的公共 Playground | 部署后补充地址 |
+| 无需匹配凭据的任意本地链 | 不可用 |
 
 ## 运行和来源
 
 - [MiniJAM Client 仓库](https://github.com/ArcheLabs/minijam-client)
 - [Stage 0 部署说明](https://github.com/ArcheLabs/minijam-client/blob/main/deploy/stage0/README.md)
-- [Native 部署说明](https://github.com/ArcheLabs/minijam-client/blob/main/deploy/native/README.md)
 - [发布流程和 manifest 说明](https://github.com/ArcheLabs/minijam-client/blob/main/deploy/stage0/RELEASING.md)
+- [Stage 0 故障排查](https://github.com/ArcheLabs/minijam-client/blob/main/deploy/stage0/TROUBLESHOOTING.md)
 - [当前 release tags](https://github.com/ArcheLabs/minijam-client/tags)
 - [JAM Gray Paper](https://graypaper.com/)
 - [Bulletin-compatible 实现](https://github.com/ArcheLabs/minijam-client/tree/main/crates/minijam-bulletin-simulator)
 
-启动 Native 本地部署后，Playground 地址为 `http://127.0.0.1:4173`。公共 Playground 地址、release manifest 和状态页应在正式公共发布后补充到此处。最近文档核验日期：2026-08-01。
+Docker 部署全部健康后，Playground 默认可通过 `http://127.0.0.1:4173` 访问。公共托管 Playground 地址、release manifest 和状态页应在部署后单独列出。最近文档核验日期：2026-08-01。
+
+:::note Maintainer note
+
+仓库可能保留供 maintainer 和开发使用的 Native 部署材料，但它们不是外部用户部署路径，也不是运行完整 Stack 的支持方式。
+
+:::
 
 ## 已知问题和边界
 

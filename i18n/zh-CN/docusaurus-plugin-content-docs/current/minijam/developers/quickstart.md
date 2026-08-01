@@ -7,9 +7,11 @@ slug: /minijam/developers/quickstart
 
 # 开发者概览
 
-:::warning 草稿
+:::warning 当前无法从公开源码构建完整 Stack
 
-端到端服务 SDK 流程目前尚未对外稳定发布。下面的命令是仓库当前的开发路径，可能需要固定工具链和私有 Jambda revision。
+完整的 MiniJAM Node、Runtime、Worker 和执行 Stack 当前依赖固定的私有 Jambda revision，外部用户无法仅使用公开仓库独立完成构建。
+
+运行完整 Stage 0 Stack 时，请使用已经发布的 Docker release。开发和体验 Service 时，请使用 Playground 及其 Compiler API。
 
 :::
 
@@ -40,4 +42,6 @@ SDK 支持无分配的单文件 C 和受限 C++ 服务，ABI 由 `service-toolch
 ./scripts/test-counter-services.sh
 ```
 
-当前开发基线包含具体的编译输出和 artifact 格式。服务执行应保持确定性，并且只使用目标运行时支持的 HostCall。
+当前开发基线包含具体的编译输出和 artifact 格式。这些命令只验证 Service SDK 示例，不构建完整 MiniJAM Node、Runtime 或 Stage 0 Stack。Service HostCall 语义来自当前固定的 Jambda/JAM 执行实现。
+
+如需运行完整环境，请继续阅读[使用 Docker 部署](../operators/docker-deployment.md)。

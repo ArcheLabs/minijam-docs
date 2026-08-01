@@ -12,9 +12,8 @@ MiniJAM 是一条独立的 Polkadot SDK 链，以经过精简的协议面实现 
 
 请选择入口：
 
-1. **了解 MiniJAM** — [介绍](./introduction/what-is-minijam.md)
+1. **了解 MiniJAM** — [简介](./introduction/what-is-minijam.md)
 2. **使用 MiniJAM** — [用户快速开始](./users/quickstart.md)
-3. **基于 MiniJAM 开发** — [开发者快速开始](./developers/quickstart.md)
-4. **运行 MiniJAM** — [本地环境](./operators/local-environment.md)
+3. **基于 MiniJAM 开发** — [开发者概览](./developers/quickstart.md)
+4. **运行 MiniJAM** — [使用 Docker 部署](./operators/docker-deployment.md)
 5. **核心概念** — [执行流程](./concepts/execution-pipeline.md)
-6. **接口参考** — [HostCall](./reference/host-calls.md)

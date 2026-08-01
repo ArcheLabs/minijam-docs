@@ -7,9 +7,11 @@ slug: /minijam/developers/quickstart
 
 # Developer Overview
 
-:::warning Draft
+:::warning Complete source builds are not publicly available
 
-The end-to-end service SDK workflow is not yet publicly stable. The commands below are the repository's current development path and may require the pinned toolchain and private Jambda revision.
+The complete MiniJAM Node, Runtime, Worker, and execution stack currently depends on a pinned private Jambda revision. It cannot be built independently from the public repository.
+
+Use the published Docker release to run the complete Stage 0 stack. For service experimentation, use the Playground and its Compiler API.
 
 :::
 
@@ -40,4 +42,6 @@ From the repository root:
 ./scripts/test-counter-services.sh
 ```
 
-The exact compiler output and artifact format are part of the current development baseline. Keep service execution deterministic and use only HostCalls supported by the target runtime.
+The exact compiler output and artifact format are part of the current Service SDK development baseline. These commands validate Service SDK examples; they do not build the complete MiniJAM Node, Runtime, or Stage 0 Stack. Service HostCall semantics come from the pinned Jambda/JAM execution implementation.
+
+To run the full environment, continue with [Docker deployment](../operators/docker-deployment.md).

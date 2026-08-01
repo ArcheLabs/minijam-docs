@@ -38,22 +38,31 @@ Stage 0 contains one Node, Compiler API, Playground API, three independent Worke
 | Candidate Worker | Available |
 | Independent Validator Workers | Available |
 | Docker Stage 0 deployment | Available |
-| Native local deployment | Available |
 | Production network | Not available |
 | Full JAM availability | Not implemented |
 | JAM disputes and judgments | Not implemented |
+| Complete source build for external users | Not available |
+| Digest-pinned Docker release deployment | Supported |
+| Hosted public Playground | Link when deployed |
+| Arbitrary credential-free local chain | Not available |
 
 ## Operational references
 
 - [MiniJAM Client repository](https://github.com/ArcheLabs/minijam-client)
 - [Stage 0 deployment README](https://github.com/ArcheLabs/minijam-client/blob/main/deploy/stage0/README.md)
-- [Native deployment README](https://github.com/ArcheLabs/minijam-client/blob/main/deploy/native/README.md)
 - [Release process and manifest instructions](https://github.com/ArcheLabs/minijam-client/blob/main/deploy/stage0/RELEASING.md)
+- [Stage 0 troubleshooting](https://github.com/ArcheLabs/minijam-client/blob/main/deploy/stage0/TROUBLESHOOTING.md)
 - [Current release tags](https://github.com/ArcheLabs/minijam-client/tags)
 - [JAM Gray Paper](https://graypaper.com/)
 - [Bulletin-compatible implementation](https://github.com/ArcheLabs/minijam-client/tree/main/crates/minijam-bulletin-simulator)
 
-The Playground is available at `http://127.0.0.1:4173` after starting the native local deployment. A public Playground address, release manifest, and status page should be linked here when a public release provides them. Last documentation verification: 2026-08-01.
+After a Docker deployment becomes healthy, the Playground is available at `http://127.0.0.1:4173` by default. A hosted public Playground URL, release manifest, and status page should be listed separately when deployed. Last documentation verification: 2026-08-01.
+
+:::note Maintainer note
+
+The repository may contain Native deployment materials for maintainer and development use. They are not an external-user deployment path and are not the supported way to run the complete Stack.
+
+:::
 
 ## Known issues and boundaries
 

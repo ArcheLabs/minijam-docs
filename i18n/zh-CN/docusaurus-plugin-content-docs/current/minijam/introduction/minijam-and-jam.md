@@ -74,9 +74,15 @@ State change
 - 不实现完整 JAM Coretime 分配和市场。
 - 使用 MiniJAM 自身的 Worker 分配与独立重执行规则验证 Candidate。
 - 将 Accumulate 和状态更新接入 MiniJAM 的运行时。
-- 对尚未支持的 HostCall 或协议能力明确返回失败，而不是模拟不存在的兼容性。
+- 在 system service 处理、Work 流程、Worker 验证、Runtime 执行和链状态之间采用 MiniJAM 特有的集成方式。
 
 这些简化降低了早期网络的实现复杂度，同时也意味着 MiniJAM 的安全边界和 JAM 不同。
+
+## HostCall 边界
+
+MiniJAM 不定义一个缩减后的应用 HostCall 集合。Service 使用的 HostCall 语义来自当前固定的 Jambda/JAM 执行实现。
+
+MiniJAM 的特有差异位于 system service 的处理，以及 Work 流程、Worker 验证、Runtime 执行和链状态之间的集成。因此，本文档不单独维护一份 MiniJAM HostCall 支持矩阵。
 
 ## “兼容”具体指什么
 
@@ -102,9 +108,9 @@ SDK、编译器、Playground 和调试工具应尽量采用可迁移的开发模
 
 MiniJAM 的目标之一，是降低未来迁移 JAM 的成本。实际迁移范围取决于应用使用的能力：
 
-- 只使用双方共同支持的 PVM、Service、Refine、Accumulate 和 HostCall 能力，迁移成本预计较低。
+- 遵循当前固定的 Jambda/JAM 执行语义，并且不依赖 MiniJAM 特有 system service 或网络行为的应用，预计需要的适配更少。
 - 使用 MiniJAM 专用网络接口、状态接口、数据发布方式或经济机制，需要适配。
-- 使用 MiniJAM 当前支持、但 JAM 最终规范发生变化的行为，需要按照目标 Gray Paper 版本修改。
+- 使用 MiniJAM 特有的 system service、状态接口、数据发布方式或网络行为，需要适配。
 - 是否能够直接复用二进制、状态或部署记录，必须由未来兼容性测试确认。
 
 因此，文档不应承诺“无修改迁移”或“字节级兼容”，除非对应测试已经存在并持续通过。
