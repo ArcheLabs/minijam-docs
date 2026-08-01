@@ -5,7 +5,9 @@ description: Run the digest-pinned MiniJAM Stage 0 release stack without buildin
 slug: /minijam/operators/docker-deployment
 ---
 
-# Run MiniJAM with Docker
+# Maintainer / Operator only: Stage 0 Docker deployment
+
+This page is not a public quickstart. Ordinary users must use the downloadable [local image bundle](./local-docker.md); MiniJAM does not distribute official Authority, Worker, Relayer, Sudo, or Faucet credentials.
 
 The complete MiniJAM stack cannot currently be built independently from the public source repository because the Node, Runtime, Worker, and execution path depend on a pinned private Jambda revision.
 
@@ -15,7 +17,7 @@ The supported distribution and deployment path is the published Stage 0 Docker r
 
 The Stage 0 release stack is not a credential-free local development chain. The Authority keystore, three Worker seeds, and Playground Relayer URI must match the public identities in the release chain spec. Arbitrary replacement keys will cause the Node, Workers, or Playground to remain unhealthy.
 
-Obtain the matching release bundle and runtime credentials from the MiniJAM maintainer before starting the stack.
+Credentials are provisioned only in the maintainer-owned release environment and must never be requested, shared, or recreated by ordinary users.
 
 :::
 
@@ -212,4 +214,3 @@ Stop the current stack, remove old volumes, replace the release manifest, raw ch
 ## Security boundary
 
 Stage 0 is resettable, Sudo-enabled, non-high-availability test infrastructure with no real economic value and no permanence guarantee. It is not a production network. Never use mainnet funds or production credentials.
-

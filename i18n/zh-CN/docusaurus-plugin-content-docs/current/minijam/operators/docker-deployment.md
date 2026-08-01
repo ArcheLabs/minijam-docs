@@ -5,7 +5,9 @@ description: 无需从源码构建，使用 digest 固定的镜像运行 MiniJAM
 slug: /minijam/operators/docker-deployment
 ---
 
-# 使用 Docker 运行 MiniJAM
+# 仅供 Maintainer / Operator：Stage 0 Docker 部署
+
+本文不是公开用户 Quickstart。普通用户必须使用可下载的[本地镜像 bundle](./local-docker.md)；MiniJAM 不会分发官方 Authority、Worker、Relayer、Sudo 或 Faucet 凭据。
 
 完整 MiniJAM Stack 当前无法仅使用公开源码独立构建，因为 Node、Runtime、Worker 和执行路径依赖固定的私有 Jambda revision。
 
@@ -212,4 +214,3 @@ docker compose --env-file deploy/stage0/.env \
 ## 安全边界
 
 Stage 0 是可重置、启用 Sudo、非高可用、用于测试的基础设施，没有真实经济价值，也不保证永久性。它不是生产网络。不要使用主网资金或生产凭据。
-
