@@ -44,7 +44,9 @@ Stage 0 contains one Node, Compiler API, Playground API, three independent Worke
 | Complete source build for external users | Not available |
 | Digest-pinned Docker release deployment | Supported |
 | Hosted public Playground | Link when deployed |
-| Arbitrary credential-free local chain | Not available |
+| Run local development network from images | Supported |
+| Hosted Stage 0 | Maintainer-operated |
+| Self-host official Stage 0 genesis | Maintainer-only |
 
 ## Operational references
 

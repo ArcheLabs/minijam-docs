@@ -15,5 +15,5 @@ Start with one of these paths:
 1. **Learn MiniJAM** — [Introduction](./introduction/what-is-minijam.md)
 2. **Use MiniJAM** — [User quickstart](./users/quickstart.md)
 3. **Build on MiniJAM** — [Developer quickstart](./developers/quickstart.md)
-4. **Run MiniJAM** — [Docker deployment](./operators/docker-deployment.md)
+4. **Run MiniJAM** — [Run locally with Docker](./operators/local-docker.md)
 5. **Concepts** — [Execution pipeline](./concepts/execution-pipeline.md)

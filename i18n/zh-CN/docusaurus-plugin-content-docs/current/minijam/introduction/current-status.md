@@ -44,7 +44,9 @@ Stage 0 包含一个 Node、Compiler API、Playground API、三个独立 Worker 
 | 外部用户从公开源码构建完整 Stack | 不可用 |
 | 使用 digest 固定镜像的 Docker release 部署 | 支持 |
 | 托管的公共 Playground | 部署后补充地址 |
-| 无需匹配凭据的任意本地链 | 不可用 |
+| 从镜像运行本地开发网络 | 支持 |
+| 托管 Stage 0 | 仅由维护者运营 |
+| 自托管官方 Stage 0 genesis | 仅维护者 |
 
 ## 运行和来源
 
