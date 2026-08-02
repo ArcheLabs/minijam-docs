@@ -16,7 +16,10 @@ const sidebars: SidebarsConfig = {
         'minijam/resources/glossary', 'minijam/resources/ecosystem-resources',
       ]},
     ]},
-    'incentive-protocol/index', 'mini/index',
+    {type: 'category', label: 'Ecosystem', collapsed: false, items: [
+      'ecosystem/incentive-protocol',
+      'ecosystem/tokenomics',
+    ]},
   ],
 };
 

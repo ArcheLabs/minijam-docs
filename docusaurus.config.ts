@@ -41,8 +41,8 @@ const config: Config = {
       items: [
         {type: 'doc', docId: 'index', label: 'Documentation', position: 'left'},
         {type: 'doc', docId: 'minijam/index', label: 'MiniJAM', position: 'left'},
-        {type: 'doc', docId: 'incentive-protocol/index', label: 'Incentive Protocol', position: 'left'},
-        {type: 'doc', docId: 'mini/index', label: 'MINI', position: 'left'},
+        {type: 'doc', docId: 'ecosystem/incentive-protocol', label: 'Incentive Protocol', position: 'left'},
+        {type: 'doc', docId: 'ecosystem/tokenomics', label: 'MINI', position: 'left'},
         {href: 'https://github.com/ArcheLabs/minijam-docs', label: 'Docs GitHub', position: 'right'},
         {href: 'https://github.com/ArcheLabs/minijam-client', label: 'MiniJAM Client', position: 'right'},
         {type: 'localeDropdown', position: 'right'},
@@ -54,7 +54,7 @@ const config: Config = {
         {title: 'Documentation', items: [
           {label: 'MiniJAM', to: '/docs/minijam'},
           {label: 'Incentive Protocol', to: '/docs/incentive-protocol'},
-          {label: 'MINI', to: '/docs/mini'},
+          {label: 'MINI Tokenomics', to: '/docs/ecosystem/tokenomics'},
         ]},
         {title: 'Project', items: [
           {label: 'Documentation repository', href: 'https://github.com/ArcheLabs/minijam-docs'},

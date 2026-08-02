@@ -1,11 +1,32 @@
 ---
 title: Run MiniJAM locally with Docker
-description: Start the public, image-based MiniJAM development network.
+description: Start the public, image-based MiniJAM local development network.
 ---
 
 # Run MiniJAM locally with Docker
 
-Download the `minijam-local-<tag>.tar.gz` and matching `.sha256` asset from the MiniJAM release, then:
+MiniJAM provides a local development network based on prebuilt Docker images. You do not need to compile MiniJAM, Jambda, or any Rust or Node.js project.
+
+## Requirements
+
+Running the local network requires:
+
+* Docker Engine or Docker Desktop
+* Docker Compose v2
+* Bash, `tar`, and `sha256sum`
+
+On Windows, run the following commands through WSL2 with Docker Desktop integration enabled.
+
+## Download and Start
+
+Download the following two files from the MiniJAM GitHub Release:
+
+```text
+minijam-local-<tag>.tar.gz
+minijam-local-<tag>.tar.gz.sha256
+```
+
+Make sure both files are in the same directory, then run:
 
 ```bash
 sha256sum -c minijam-local-<tag>.tar.gz.sha256
@@ -14,12 +35,17 @@ cd minijam-local-<tag>
 ./minijam-local up
 ```
 
-Open [http://127.0.0.1:4173](http://127.0.0.1:4173). This needs Docker only: no Rust, Cargo, Node.js, Jambda checkout, keystore, Worker seed, or Stage 0 credential.
+The startup script will:
 
-:::warning Local development only
-This network uses known public development keys, has no real-value assets, and has a different genesis from hosted Stage 0. Do not expose ports to the internet or reuse these keys on any public network.
-:::
+1. check Docker and Docker Compose;
+2. verify that all images are pinned to immutable SHA-256 digests;
+3. pull the required images;
+4. start the MiniJAM Node, Compiler, Playground, three Workers, and Web frontend;
+5. wait until all services are healthy.
 
-Use `./minijam-local status`, `logs`, `down`, `up`, or `reset` to operate it. The wrapper validates digest-pinned images and refuses non-loopback bindings.
+After startup completes, open:
 
-The official Stage 0 Compose deployment is **Maintainer / Operator only**. Its credentials are never distributed in images or release bundles.
+* Playground: http://127.0.0.1:4173
+* Node RPC: http://127.0.0.1:9944
+
+You can interact through the Playground Web UI or through Node RPC.

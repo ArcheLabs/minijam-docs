@@ -8,9 +8,9 @@ sidebar_position: 1
 
 # MiniJAM
 
-MiniJAM is an independent Polkadot SDK chain implementing a deliberately reduced JAM protocol surface, allowing developers to build and run JAM-style services today.
+MiniJAM is an independent Polkadot SDK chain. It implements the core JAM service execution path with a reduced protocol surface, so developers can build and run JAM-style services now.
 
-Start with one of these paths:
+Choose an entry point:
 
 1. **Learn MiniJAM** — [Introduction](./introduction/what-is-minijam.md)
 2. **Build on MiniJAM** — [Developer overview](./developers/quickstart.md)

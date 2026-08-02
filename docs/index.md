@@ -7,6 +7,9 @@ sidebar_position: 1
 
 # MiniJAM ecosystem documentation
 
-This site documents three related product areas: MiniJAM, Incentive Protocol, and MINI. MiniJAM is an independent Polkadot SDK chain implementing a deliberately reduced JAM protocol surface, allowing developers to build and run JAM-style services today. It is the primary documentation area in this phase; the other two products currently provide overview pages only.
+MiniJAM is a compact JAM implementation running on a Polkadot parachain. It is currently in the Stage 0 testnet phase. You can build, deploy, and upgrade Services, and submit Work.
 
-Choose a product from the navigation or begin with [MiniJAM](./minijam/index.md).
+* [Learn MiniJAM](./minijam/index.md)
+* [Developer guide](./minijam/developers/quickstart.md)
+* [Playground API](./minijam/developers/playground-api.md)
+* [Resources and tools](./minijam/resources/ecosystem-resources.md)

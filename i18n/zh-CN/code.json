@@ -10,8 +10,8 @@
   "MiniJAM": {
     "message": "MiniJAM"
   },
-  "MiniJAM is an independent Polkadot SDK chain implementing a deliberately reduced JAM protocol surface, allowing developers to build and run JAM-style services today.": {
-    "message": "MiniJAM 是一条独立的 Polkadot SDK 链，以经过精简的协议面实现 JAM 的核心服务执行路径，让开发者现在就能构建和运行 JAM 风格的服务。"
+  "Build and run JAM-style Services on the current MiniJAM Stage 0 network.": {
+    "message": "在当前 MiniJAM Stage 0 网络上构建并运行 JAM 风格的 Service。"
   },
   "Active": {
     "message": "活跃"
@@ -19,17 +19,17 @@
   "Incentive Protocol": {
     "message": "激励协议"
   },
-  "A protocol for funding, launching, and incentivizing open projects.": {
-    "message": "用于资助、启动和激励开放项目的协议。"
+  "Project markets, emissions, liquidity, and public-goods incentives for the MINI ecosystem.": {
+    "message": "面向 MINI 生态的项目市场、排放、流动性和公共物品激励。"
   },
-  "Planned": {
-    "message": "规划中"
+  "Draft": {
+    "message": "草案"
   },
   "MINI": {
     "message": "MINI"
   },
-  "The economic system covering the Genesis Pool, MINI Lucky, and the MiniJAM ecosystem.": {
-    "message": "涵盖 Genesis Pool、MINI Lucky 和 MiniJAM 生态的经济系统。"
+  "Initial MINI allocation, Root market launch, liquidity, and long-term network economics.": {
+    "message": "MINI 初始分配、Root 市场启动、流动性和长期网络经济模型。"
   },
   "MiniJAM Documentation": {
     "message": "MiniJAM 文档"

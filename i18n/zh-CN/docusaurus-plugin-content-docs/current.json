@@ -18,5 +18,9 @@
   "sidebar.docsSidebar.category.Resources": {
     "message": "资源",
     "description": "The label for category 'Resources' in sidebar 'docsSidebar'"
+  },
+  "sidebar.docsSidebar.category.Ecosystem": {
+    "message": "生态",
+    "description": "The label for category 'Ecosystem' in sidebar 'docsSidebar'"
   }
 }

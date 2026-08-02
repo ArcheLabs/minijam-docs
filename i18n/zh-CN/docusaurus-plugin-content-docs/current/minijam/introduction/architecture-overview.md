@@ -7,8 +7,6 @@ sidebar_position: 3
 
 # 架构概览
 
-# 架构概览
-
 MiniJAM 是一个运行在 Polkadot 环境中的简化 JAM 实现。它拥有 JAM 最核心的执行模型：
 
 - Service；

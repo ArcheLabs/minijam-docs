@@ -15,9 +15,9 @@
     "message": "激励协议",
     "description": "The label of footer link with label=Incentive Protocol linking to /docs/incentive-protocol"
   },
-  "link.item.label.MINI": {
-    "message": "MINI",
-    "description": "The label of footer link with label=MINI linking to /docs/mini"
+  "link.item.label.MINI Tokenomics": {
+    "message": "MINI 代币经济学",
+    "description": "The label of footer link with label=MINI Tokenomics linking to /docs/ecosystem/tokenomics"
   },
   "link.item.label.Documentation repository": {
     "message": "文档仓库",
