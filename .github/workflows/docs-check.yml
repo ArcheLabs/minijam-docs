@@ -3,9 +3,9 @@ on:
   push:
     branches:
       - main
-    paths: [docs/**, i18n/**, src/**, static/**, scripts/**, docusaurus.config.ts, sidebars.ts, package.json, package-lock.json, tsconfig.json, .github/workflows/docs-check.yml]
+    paths: [docs/**, i18n/**, src/**, static/**, scripts/**, docusaurus.config.ts, sidebars.ts, package.json, package-lock.json, tsconfig.json, .github/workflows/**]
   pull_request:
-    paths: [docs/**, i18n/**, src/**, static/**, scripts/**, docusaurus.config.ts, sidebars.ts, package.json, package-lock.json, tsconfig.json, .github/workflows/docs-check.yml]
+    paths: [docs/**, i18n/**, src/**, static/**, scripts/**, docusaurus.config.ts, sidebars.ts, package.json, package-lock.json, tsconfig.json, .github/workflows/**]
   workflow_dispatch:
 permissions: {contents: read}
 jobs:
