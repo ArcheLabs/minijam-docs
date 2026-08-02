@@ -46,35 +46,8 @@ jobs:
           BASE_URL_OVERRIDE: ${{ vars.BASE_URL }}
         shell: bash
         run: |
-          if [ -n "$SITE_URL_OVERRIDE" ]; then
-            echo "SITE_URL=$SITE_URL_OVERRIDE" >> "$GITHUB_ENV"
-          fi
-
-          if [ -n "$BASE_URL_OVERRIDE" ]; then
-            echo "BASE_URL=$BASE_URL_OVERRIDE" >> "$GITHUB_ENV"
-          fi
-
-          if [ -n "$SITE_URL_OVERRIDE" ] && [ -n "$BASE_URL_OVERRIDE" ]; then
-            exit 0
-          fi
-
-          repo_name="${GITHUB_REPOSITORY#*/}"
-          owner="${GITHUB_REPOSITORY_OWNER}"
-          pages_host="${owner}.github.io"
-
-          if [ -z "$SITE_URL_OVERRIDE" ]; then
-            echo "SITE_URL=https://${pages_host}" >> "$GITHUB_ENV"
-          fi
-
-          if [ -n "$BASE_URL_OVERRIDE" ]; then
-            exit 0
-          fi
-
-          if [ "$repo_name" = "${owner}.github.io" ]; then
-            echo "BASE_URL=/" >> "$GITHUB_ENV"
-          else
-            echo "BASE_URL=/${repo_name}/" >> "$GITHUB_ENV"
-          fi
+          echo "SITE_URL=${SITE_URL_OVERRIDE:-https://docs.minijam.org}" >> "$GITHUB_ENV"
+          echo "BASE_URL=${BASE_URL_OVERRIDE:-/}" >> "$GITHUB_ENV"
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
