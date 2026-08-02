@@ -13,7 +13,7 @@ MiniJAM is an independent Polkadot SDK chain implementing a deliberately reduced
 Start with one of these paths:
 
 1. **Learn MiniJAM** — [Introduction](./introduction/what-is-minijam.md)
-2. **Use MiniJAM** — [User quickstart](./users/quickstart.md)
-3. **Build on MiniJAM** — [Developer quickstart](./developers/quickstart.md)
-4. **Run MiniJAM** — [Run locally with Docker](./operators/local-docker.md)
-5. **Concepts** — [Execution pipeline](./concepts/execution-pipeline.md)
+2. **Build on MiniJAM** — [Developer overview](./developers/quickstart.md)
+3. **Run MiniJAM** — [Run locally with Docker](./developers/local-docker.md)
+4. **Integrate the Playground** — [Playground API](./developers/playground-api.md)
+5. **Find resources** — [JAM and MiniJAM resources](./resources/ecosystem-resources.md)

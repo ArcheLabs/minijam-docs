@@ -11,21 +11,9 @@
     "message": "简介",
     "description": "The label for category 'Introduction' in sidebar 'docsSidebar'"
   },
-  "sidebar.docsSidebar.category.Use MiniJAM": {
-    "message": "使用 MiniJAM",
-    "description": "The label for category 'Use MiniJAM' in sidebar 'docsSidebar'"
-  },
   "sidebar.docsSidebar.category.Build on MiniJAM": {
     "message": "基于 MiniJAM 开发",
     "description": "The label for category 'Build on MiniJAM' in sidebar 'docsSidebar'"
-  },
-  "sidebar.docsSidebar.category.Run MiniJAM": {
-    "message": "运行 MiniJAM",
-    "description": "The label for category 'Run MiniJAM' in sidebar 'docsSidebar'"
-  },
-  "sidebar.docsSidebar.category.Concepts": {
-    "message": "核心概念",
-    "description": "The label for category 'Concepts' in sidebar 'docsSidebar'"
   },
   "sidebar.docsSidebar.category.Resources": {
     "message": "资源",

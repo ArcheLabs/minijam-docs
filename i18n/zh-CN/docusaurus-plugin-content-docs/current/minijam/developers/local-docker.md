@@ -5,7 +5,28 @@ description: 启动公开、基于镜像的 MiniJAM 本地开发网络。
 
 # 使用 Docker 在本地运行 MiniJAM
 
-从 MiniJAM Release 下载 `minijam-local-<tag>.tar.gz` 及对应 `.sha256`，然后执行：
+MiniJAM 提供了一个基于预构建 Docker 镜像的本地开发网络。你不需要编译 MiniJAM、Jambda 或任何 Rust、Node.js 项目。
+
+## 环境要求
+
+运行本地网络需要：
+
+* Docker Engine 或 Docker Desktop
+* Docker Compose v2
+* Bash、`tar` 和 `sha256sum`
+
+在 Windows 上，建议通过启用了 Docker Desktop 集成的 WSL2 运行以下命令。
+
+## 下载并启动
+
+从 MiniJAM GitHub Release 下载以下两个文件：
+
+```text
+minijam-local-<tag>.tar.gz
+minijam-local-<tag>.tar.gz.sha256
+```
+
+确保两个文件位于同一目录，然后执行：
 
 ```bash
 sha256sum -c minijam-local-<tag>.tar.gz.sha256
@@ -14,12 +35,17 @@ cd minijam-local-<tag>
 ./minijam-local up
 ```
 
-打开 [http://127.0.0.1:4173](http://127.0.0.1:4173)。只需要 Docker；不需要 Rust、Cargo、Node.js、Jambda 源码、keystore、Worker seed 或 Stage 0 凭据。
+启动脚本会：
 
-:::warning 仅用于本地开发
-该网络使用公开的确定性开发密钥，没有真实价值资产，且与托管 Stage 0 使用不同 genesis。不得将端口暴露到公网，也不得在任何公共网络复用这些密钥。
-:::
+1. 检查 Docker 和 Docker Compose；
+2. 验证所有镜像均固定到不可变的 SHA-256 digest；
+3. 拉取所需镜像；
+4. 启动 MiniJAM Node、Compiler、Playground、三个 Worker 和 Web 前端；
+5. 等待所有服务进入健康状态。
 
-可使用 `./minijam-local status`、`logs`、`down`、`up` 和 `reset` 管理网络。包装脚本会验证 digest 固定的镜像并拒绝非 loopback 绑定。
+启动完成后，打开：
 
-官方 Stage 0 Compose 部署仅供 **Maintainer / Operator** 使用；其凭据绝不随镜像或 release bundle 分发。
+* Playground：http://127.0.0.1:4173
+* Node RPC：http://127.0.0.1:9944
+
+你可以使用 Playground 提供的 Web UI 或者通过 Node RPC 进行交互。

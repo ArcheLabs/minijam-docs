@@ -7,6 +7,9 @@ sidebar_position: 1
 
 # MiniJAM 生态文档
 
-本站包含 MiniJAM、Incentive Protocol 和 MINI 三个产品区域。MiniJAM 是一条独立的 Polkadot SDK 链，以经过精简的协议面实现 JAM 的核心服务执行路径，让开发者现在就能构建和运行 JAM 风格的服务。当前阶段以 MiniJAM 为主要文档区域；另外两个产品目前只提供 Overview 页面。
+MiniJAM 是一个精简的 JAM 实现，运行在 Polkadot 平行链上。目前出于阶段 0 测试网，你可以构建、部署和升级 Service，提交 Work。
 
-请从导航中选择产品，或从 [MiniJAM](./minijam/index.md) 开始。
+* [了解 MiniJAM](./minijam/index.md)
+* [开发指南](./minijam/developers/index.md)
+* [Playground API](./minijam/developers/playground-api.md)
+* [资源与工具](./minijam/resources/ecosystem-resources.md)
