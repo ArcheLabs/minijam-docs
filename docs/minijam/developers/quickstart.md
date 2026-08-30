@@ -11,6 +11,11 @@ MiniJAM Playground lets you write, compile, and deploy a simple MiniJAM Service 
 
 The current Playground provides C and C++ examples. It is suitable for trying the basic MiniJAM Stage 0 flow.
 
+## Choose a development path
+
+- **JamScript:** the recommended high-level, deterministic TypeScript-based path for writing JAM Services. Start with the [JamScript overview](/docs/jamscript) or [Quickstart](/docs/jamscript/getting-started/quickstart).
+- **C / C++:** available through the current MiniJAM Playground and lower-level tooling. The workflow below remains the C/C++ Playground path.
+
 :::warning The Complete Stack Cannot Currently Be Built from Public Source
 
 Because the Jambda dependency used by MiniJAM is currently private, you cannot build the complete MiniJAM Stack locally from public source alone.
