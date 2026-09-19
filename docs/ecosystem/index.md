@@ -1,5 +1,4 @@
 ---
-id: ecosystem-index
 title: MINI Ecosystem
 slug: /ecosystem
 ---
