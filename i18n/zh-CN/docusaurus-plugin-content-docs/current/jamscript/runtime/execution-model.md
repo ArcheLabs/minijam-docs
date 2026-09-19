@@ -1,17 +1,54 @@
 ---
 title: JamScript 执行模型
-description: JamScript 源码如何成为确定性的 PVM Service。
+description: JamScript 源码如何成为确定性的 JamV1 PVM Service。
 ---
 
 # JamScript 执行模型
 
+## 构建流程
+
 ```text
-service.ts → JamScript 元数据 IR + ScriptC M2 → 生成的 runtime wrapper
-           → RISC-V ELF → PolkaVM 程序 → JamV1 PVM/blob
+service.ts
+  → parser + TypeIr metadata
+  → ScriptC M2 transformed TypeScript/C
+  → 生成的 Rust runtime wrapper
+  → freestanding riscv64/lp64e ELF
+  → PolkaVM 程序
+  → JamV1 PVM/blob
 ```
 
-构建时，JamScript 生成 ABI 和 Service wrapper，通过 ScriptC 编译可达的 TypeScript compute，并链接 freestanding `riscv64/lp64e` guest。MiniJAM converter 输出 `service.polkavm`、`service.pvm` 和 `service.blob`。
+Parser 提取 action、state schema、query、认证方式和 ABI 类型。ScriptC M2 编译
+应用 body。生成的 Rust 负责协议敏感的部分：SignedActionV1 校验、state-view
+处理、transaction 边界、result 编码以及 Refine/Accumulate export。
 
-执行时，`minijam_refine` 校验 Formal V1 签名 action，读取已认证的历史状态视图，运行 action 并返回版本化结果。`minijam_accumulate` 接收当前 tick 和有序 Work Result，校验过期条件和 parent-root compare-and-swap，再提交新的托管状态 root。
+最终 target 是 JamV1。Canonical build 使用的 target SDK 由 JamScript toolchain
+bundle 自带，因此 MiniJAM checkout 不是 compiler dependency。
 
-MiniJAM 是当前 adapter；此基线不声称直接支持完整 JAM profile。
+## Runtime 流程
+
+```text
+Work payload
+  → Refine 验证并执行 action
+  → versioned transition + receipts
+  → Accumulate 检查 transition
+  → managed-state root commitment
+```
+
+Refine 在历史的 proof-backed state view 上执行，并生成确定性的 state diff/root
+transition。Accumulate 消费有序的 Refine result，只有 parent root 和 validity
+检查匹配时才发布新的 root。应用代码不会在 Accumulate 中再次执行。
+
+## 生成的产物
+
+`jams build` 除了 PVM artifact，还会写入开发者需要检查的文件：
+
+- `service.abi.json`：action、query、state 和 type descriptor；
+- `build.json`：compiler、target、code、ABI 和 toolchain identity；
+- `protocol-v0.json`：当前 Formal V1/developer-preview 边界；
+- `builder.json`：portable producer-side application metadata；
+- `generated_service.rs` 与 `generated_builder_application.rs`；
+- `checksums.json`：bundle 文件 hash；
+- `scriptc/`：可重定位的 ScriptC source、profile、runtime 和 generated C。
+
+把这些文件当作构建证据。应用代码应依赖 source API 和 generated ABI，不要依赖
+生成的 Rust function name。

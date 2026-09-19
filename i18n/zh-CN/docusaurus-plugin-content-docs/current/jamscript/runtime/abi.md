@@ -1,20 +1,55 @@
 ---
 title: JamScript Runtime ABI
-description: 当前应用、runtime 与 MiniJAM target ABI 版本。
+description: 当前应用、runtime 与 JamV1 ABI 边界。
 ---
 
 # JamScript Runtime ABI
 
+以下是当前 Formal V1 developer-preview baseline：
+
 | 边界 | 当前值 |
 |---|---|
 | 源语言 | `0.2` |
-| Application / Native C ABI | `1` / `1` |
-| 签名 action | Formal `SignedActionV1` |
-| 托管状态 protocol/layout | `1` / `1` |
-| Runtime Refine input / recovery | `1` / `1` |
-| target adapter | `minijam-0.2` |
-| MiniJAM SDK ABI | `1` |
+| CLI/workspace | `0.1.0`，公共命令 `jams` |
+| ScriptC backend | `scriptc-m2`，ScriptC `0.0.34` |
+| Application ABI | `1` |
+| Native C ABI | `1`（experimental plumbing） |
+| Signed action | `SignedActionV1` |
+| Managed-state protocol/layout | `1` / `1` |
+| Runtime Refine input | `1` |
+| Recovery format | `1` |
+| Target | `jam-v1` |
+| PolkaVM linker | `0.30.0` |
+| JAM blob encoder | `0.1.28` |
 
-公开 PVM export 是 `minijam_refine` 和 `minijam_accumulate`。Refine 通过 `a0/a1` 返回输出指针/大小；Accumulate 启动时从 `a0/a1` 取得输入指针/大小且无输出寄存器。
+生成的公开 PVM export 是 `minijam_refine` 和 `minijam_accumulate`。Refine 通过
+`a0/a1` 返回 output pointer/size；Accumulate 通过 `a0/a1` 接收 invocation-context
+input，没有 application output register。这些属于 target integration 细节。
 
-应用数据使用生成的 descriptor 和 Jambda `jam-codec 0.1.1` 规则。decoder 会拒绝错误 tag、非法 UTF-8、越界值、尾随字节和不完整数据。`build.json`、`protocol-v0.json` 与 `service.abi.json` 是 artifact 层面的事实来源。Formal V1 是首个受支持的 wire/runtime protocol，但 JamScript 整体仍未稳定。
+## Application ABI
+
+`service.abi.json` 从同一个 `TypeIr` graph 生成，描述：
+
+- action name、selector、认证方式和 input field；
+- query name、所属 state、key type 和 nullable output；
+- state schema、key/value type 和 state kind；
+- 所有引用到的 type descriptor。
+
+当前 M2 Service 路径中，action 的 `executeOutput` 是 `unit`；state 变化要等
+finalized 后通过 managed-state query 观察。Client codec 支持更宽的 descriptor 集合，
+详见[类型与数据](../language/types-and-data.md)。
+
+Application value 使用规范 JAM codec 规则。它和 JAM protocol 边界不同，后者在
+Accumulate 初始化中使用 `FnEncode` 字段。
+
+## Artifact 的事实来源
+
+排查具体 build 时一起检查：
+
+- `build.json`：精确的 compiler、target 和 toolchain identity；
+- `protocol-v0.json`：产物包含的 protocol boundary；
+- `service.abi.json`：application contract；
+- `checksums.json`：bundle 完整性。
+
+Formal V1 是首个受支持的 wire/runtime protocol。JamScript 源码兼容性和 M2 可执行
+surface 仍然是 pre-stable。

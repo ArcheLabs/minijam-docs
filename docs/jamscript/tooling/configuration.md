@@ -1,11 +1,14 @@
 ---
 title: JamScript Project Configuration
-description: Implemented jamscript.toml fields for language 0.2.
+description: The implemented jamscript.toml fields for language 0.2.
 ---
 
 # JamScript Project Configuration
 
-`jamscript.toml` is strict: unknown fields are errors.
+`jamscript.toml` is strict. Unknown fields are errors, which is helpful when a
+configuration was copied from an older branch.
+
+## Minimal project
 
 ```toml
 [package]
@@ -16,16 +19,68 @@ language = "0.2"
 
 [compiler]
 backend = "scriptc"
-
-[management]
-mode = "deployer"
-
-[target.minijam]
-sdk_root = "../minijam-client"
 ```
 
-`package` and the ScriptC compiler selection are required. `management.mode` accepts `immutable`, `deployer`, or `key`; `deployer` needs `management.account` or `JAMSCRIPT_DEPLOYER_ACCOUNT`, and `key` requires `account`. Accounts are 32-byte hexadecimal public keys.
+This is enough for an immutable Service. `jams new` also adds a
+`[management]` section so the generated project is ready for a managed
+deployment policy.
 
-`target.minijam.sdk_root` selects the SDK. The environment variable `JAMSCRIPT_MINIJAM_SDK` is the alternative. Legacy `service_id` and `genesis_hash` fields are accepted for routing/network-domain compatibility, but `service_id` is not embedded in SignedActionV1 identity.
+## Implemented fields
 
-Native C modules may be declared as `[native.NAME]` with `language = "c"`, a non-empty `sources` list, and optional `include_dirs`. Paths must remain inside the project. No optimization, output, SDK ABI, or adapter-version manifest fields are currently implemented; output is selected with the CLI `--output` option.
+| Section/field | Required | Meaning |
+|---|---|---|
+| `package.name` | yes | Package/Service display name. |
+| `package.version` | yes | Application package version recorded in the ABI. |
+| `package.entry` | yes | TypeScript entry file, usually `src/service.ts`. |
+| `package.language` | yes | Must be `0.2`. |
+| `compiler.backend` | yes | Must be `scriptc`. |
+| `management.mode` | no | `immutable`, `deployer`, or `key`. Defaults to `deployer` when the section exists. |
+| `management.account` | for `key`; optional for `deployer` | A 32-byte hexadecimal wallet public key. |
+| `target.jam.genesis_hash` | no | 32-byte network domain used in action/management signing. Defaults to zero when omitted. |
+
+Example with an explicit network domain and management key:
+
+```toml
+[target.jam]
+genesis_hash = "0xYOUR_64_HEX_CHARACTER_GENESIS_HASH"
+
+[management]
+mode = "key"
+account = "0xYOUR_64_HEX_CHARACTER_PUBLIC_KEY"
+```
+
+`deployer` reads `management.account` first and then
+`JAMSCRIPT_DEPLOYER_ACCOUNT`. The deployer account must be a wallet public key
+and must not equal the generated `serviceKey`. `immutable` must not have an
+account and disables management actions.
+
+## Service identity
+
+The CLI stores identity separately from the manifest in
+`.jamscript/service.json`:
+
+```json
+{
+  "version": 2,
+  "serviceKey": "0x…",
+  "instanceId": "0x…",
+  "name": "counter"
+}
+```
+
+`serviceKey` identifies the Service. `instanceId` is a stable deployment
+identity used by management envelopes. Back up this file and do not regenerate
+it casually.
+
+## Target and native-module notes
+
+The current JamScript target is `jam-v1`, and its SDK comes from the managed
+bundle or the repository's own target directory. There is no implemented
+`[target.minijam] sdk_root` field; setting it produces an unknown-field error.
+MiniJAM is a downstream deployment/compatibility workflow.
+
+The manifest parser has `[native.NAME]` fields for future/experimental C
+module plumbing (`language`, `sources`, and optional `include_dirs`), but the
+current ScriptC M2 source transform accepts imports from `jam` only. Do not use
+`native:<module>` in a language `0.2` Service unless you are working on that
+experimental boundary.

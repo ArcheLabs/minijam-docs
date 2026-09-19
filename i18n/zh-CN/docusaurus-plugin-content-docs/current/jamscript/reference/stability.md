@@ -1,17 +1,30 @@
 ---
 title: JamScript 稳定性策略
-description: JamScript 当前稳定级别和 breaking change 预期。
+description: JamScript 的稳定级别和 breaking change 预期。
 ---
 
 # JamScript 稳定性策略
 
-JamScript 尚未稳定。
+JamScript 当前是 developer preview。下面的标签说明今天哪些内容可以相对放心地
+依赖。
 
 | 级别 | 含义 | 当前示例 |
 |---|---|---|
-| Formal V1 内稳定 | 变更需要版本化边界 | SignedActionV1、application ABI 1 descriptor、managed-state layout 1 |
-| 实验性 | 可用但可能随迁移说明改变 | 语言 `0.2`、CLI、ScriptC M2、配置 |
-| 内部 | 不提供应用兼容承诺 | 生成的 Rust/C、allocator 布局、构建中间文件 |
-| 已弃用 | 暂时保留，不建议新增使用 | manifest `service_id` 与 legacy `genesis_hash` 拼写 |
+| Versioned protocol boundary | Wire 变化需要新的 versioned boundary | `SignedActionV1`、application ABI `1`、managed-state protocol/layout `1` |
+| Preview API | 可以使用，但源码或行为可能变化 | 语言 `0.2`、`jams` CLI、ScriptC M2、`jamscript.toml` |
+| Generated/internal | 不要依赖名称或 layout | Generated Rust/C、allocator layout、build staging file、host-call 细节 |
+| Experimental | Plumbing 已存在，但还未端到端支持 | Native C import、更宽的 M2 executable type surface |
 
-Formal V1 是首个受支持的 wire/runtime protocol，之前的开发代际不是合同。源码兼容范围窄于 TypeScript，稳定语言发布前仍可能改变。可复现构建应锁定仓库和 lockfile revision，并把 schema 变化视为明确的状态迁移。
+Formal V1 是首个受支持的 wire/runtime protocol；此前的开发代际不是兼容合同。
+源码兼容范围也窄于通用 TypeScript。
+
+面向类生产工作时：
+
+- 固定 JamScript CLI/toolchain release 和 source revision；
+- 在 artifact 记录中保留 `build.json` 与 `service.abi.json`；
+- 保持 Service identity 文件稳定；
+- 把 type/schema 变化当作 migration；
+- 除非在自己的精确 toolchain 中验证过，否则使用当前 M2 executable subset。
+
+Generated function name、heap size、register convention 和中间文件可以在不提升
+language version 的情况下变化。

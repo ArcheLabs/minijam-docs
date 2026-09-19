@@ -5,8 +5,30 @@ description: Execution-local allocation and persistent-state boundaries.
 
 # JamScript Memory Model
 
-The generated Service runs in bounded PVM linear memory. Ordinary variables, arrays, strings, objects, and typed arrays are execution-local and do not persist between calls. Persistent values must use managed state.
+The generated Service runs in bounded PolkaVM linear memory. A JavaScript
+object, array, string, `Uint8Array`, or local variable exists only for the
+current execution. If data must survive a call, put it in managed state.
 
-The freestanding runtime provides C-compatible `malloc`, `calloc`, `realloc`, and `free` symbols for ScriptC. They delegate to the guest allocator. Allocation is bounded; capacity exhaustion traps rather than requesting memory from an operating system. Freed blocks are marked, while reclamation and exact heap tuning remain runtime implementation details rather than a stable application API.
+## Current runtime budgets
 
-The production guest currently reserves a 64 KiB ScriptC heap, and the PVM build declares a 2 MiB minimum stack. These are current target parameters, not language guarantees. Application code should prefer bounded data and avoid relying on allocator addresses or object layout.
+| Resource | Current boundary |
+|---|---:|
+| ScriptC guest heap | 64 KiB |
+| Minimum PVM stack declared by the guest | 2 MiB |
+| State-view entries | 4,096 |
+| Encoded state view | 1 MiB |
+| One state value | 64 KiB |
+| One state key | 4 KiB |
+
+The heap is reset at guest entry. `malloc`, `calloc`, `realloc`, and `free`
+are provided as freestanding C-compatible symbols for ScriptC; they do not
+request memory from an operating system. Exhausting the heap is a runtime
+failure, not an invitation to grow it dynamically.
+
+These are current target parameters, not a source-level compatibility promise.
+Write bounded code, avoid building large temporary collections, and do not
+depend on allocator addresses or object layout.
+
+The action payload and generated result also have bounded runtime limits. The
+compiler's maximum-encoded-length checks are the earliest and clearest place
+to catch an oversized schema.

@@ -1,31 +1,77 @@
 ---
 title: Your First JamScript Service
-description: Understand the generated counter Service from source to state transition.
+description: Understand a small stateful JamScript Service from source to query.
 ---
 
 # Your First JamScript Service
 
-The generated project contains one action:
+Here is the smallest useful stateful Service in the current ScriptC M2 path:
 
 ```ts
-import { action, wallet, u64 } from "jam";
+import { action, wallet, stateMap, query, address, u32 } from "jam";
+
+const counters = stateMap({
+  schema: "counter/v1",
+  key: address,
+  value: u32,
+});
 
 export const increment = action({
   auth: wallet(),
-  input: { value: u64 },
+  input: { amount: u32 },
   execute(ctx, input) {
-    return input.value + 1;
+    const old = counters.get(ctx.sender);
+    counters.set(
+      ctx.sender,
+      old === null ? input.amount : old + input.amount,
+    );
   },
 });
+
+export const getCounter = query(counters);
 ```
 
-`wallet()` requires a valid Formal V1 signed action. The `u64` descriptor makes input bounded and fixes its wire representation. The compiler assigns an action selector and emits it in `service.abi.json`.
+## Read the example
 
-```text
-signed input → generated Refine entry → authenticate and execute → Work Result
-Work Result → generated Accumulate entry → validate root/expiry → commit state root
+`stateMap` declares an authenticated map. Its keys are `address` values and
+its values are `u32` values. `schema` is part of the state identity; give it a
+versioned name and do not silently change its meaning later.
+
+`wallet()` means the action must arrive as a Formal `SignedActionV1`. The
+runtime verifies the network domain, Service key, action selector, payload
+hash, sr25519 signature, expiry, and the sender's sequential nonce before the
+body runs. `ctx.sender` is the verified 32-byte wallet address.
+
+`get` returns `null` when a key is absent. `set` writes to a transaction overlay;
+the change becomes persistent only when the Refine/Accumulate transition is
+accepted. If the action calls `abort(code)` or fails, its state changes are
+rolled back.
+
+`query(counters)` publishes a client-readable description of the map. A query
+does not execute application code and does not mutate state. The client reads
+the finalized managed-state root, verifies a proof for the requested key, and
+then decodes the value.
+
+## Why the action has no `return`
+
+The current M2 service runtime uses `executeOutput: unit`. The useful result of
+this example is the state transition, which clients read through
+`getCounter`. The return expression shown in older counter examples belongs to
+an earlier compiler path and should not be used as an application output in a
+current `0.2` Service.
+
+## Build it
+
+```bash
+export JAMSCRIPT_DEV_TOOLCHAIN=1
+export JAMSCRIPT_DEPLOYER_ACCOUNT=0xYOUR_64_HEX_CHARACTER_PUBLIC_KEY
+./target/debug/jams check .
+./target/debug/jams abi .
+./target/debug/jams build . --output dist
 ```
 
-This smallest example returns a computed result but declares no persistent application state. For persistence, declare a `state(...)` or `stateMap(...)`; managed state is authenticated during Refine and only its reserved root commitment is written during Accumulate.
+For the release workflow, replace `./target/debug/jams` with `jams` and add
+`--offline` after the toolchain has been installed.
 
-Build it with the commands in the [Quickstart](./quickstart.md). Continue with [State](../language/state.md), [Refine and Accumulate](../runtime/refine-and-accumulate.md), [Supported JavaScript](../language/supported-javascript.md), and the [compiler](../tooling/compiler.md).
+Continue with [State](../language/state.md), [Types and data](../language/types-and-data.md),
+and [Refine and Accumulate](../runtime/refine-and-accumulate.md).
