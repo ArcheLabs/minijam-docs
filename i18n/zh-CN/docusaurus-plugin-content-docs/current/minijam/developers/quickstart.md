@@ -11,6 +11,11 @@ MiniJAM Playground 允许你直接在浏览器中编写、编译和部署一个�
 
 当前 Playground 提供 C 和 C++ 示例，适合用于体验 MiniJAM Stage 0 的基本流程。
 
+## 选择开发路径
+
+- **JamScript：** 推荐的高层确定性 TypeScript 风格 JAM Service 开发路径。从 [JamScript 概览](/docs/jamscript)或[快速开始](/docs/jamscript/getting-started/quickstart)入门。
+- **C / C++：** 通过当前 MiniJAM Playground 和底层工具提供。下文继续介绍 C/C++ Playground 流程。
+
 :::warning 当前无法从公开源码构建完整 Stack
 
 由于 MiniJAM 所依赖的 Jambda 目前处于私有状态，你暂时无法仅使用公开源码在本地构建完整的 MiniJAM Stack。

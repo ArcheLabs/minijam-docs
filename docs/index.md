@@ -5,11 +5,21 @@ slug: /
 sidebar_position: 1
 ---
 
-# MiniJAM ecosystem documentation
+# Documentation
 
-MiniJAM is a compact JAM implementation running on a Polkadot parachain. It is currently in the Stage 0 testnet phase. You can build, deploy, and upgrade Services, and submit Work.
+MiniJAM provides a JAM-compatible environment for building and testing Services today. JamScript is a separate language and toolchain for compiling deterministic TypeScript-based Services to PVM programs.
 
-* [Learn MiniJAM](./minijam/index.md)
-* [Developer guide](./minijam/developers/quickstart.md)
-* [Playground API](./minijam/developers/playground-api.md)
-* [Resources and tools](./minijam/resources/ecosystem-resources.md)
+## Build
+
+### [MiniJAM](./minijam/index.md)
+
+Learn the execution environment, network architecture, Service workflow, deployment, and [Playground](./minijam/developers/quickstart.md).
+
+### [JamScript](./jamscript/index.md)
+
+Start with the [JamScript Quickstart](./jamscript/getting-started/quickstart.md), then explore the [language reference](./jamscript/language/language-overview.md) and [supported JavaScript](./jamscript/language/supported-javascript.md).
+
+## Ecosystem
+
+- [Incentive Protocol](./ecosystem/incentive-protocol.md): proposed markets and public-goods incentives.
+- [MINI Tokenomics](./ecosystem/tokenomics.md): allocation, launch, liquidity, and network economics.

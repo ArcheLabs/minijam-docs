@@ -46,7 +46,7 @@ jobs:
           BASE_URL_OVERRIDE: ${{ vars.BASE_URL }}
         shell: bash
         run: |
-          echo "SITE_URL=${SITE_URL_OVERRIDE:-https://docs.minijam.org}" >> "$GITHUB_ENV"
+          echo "SITE_URL=${SITE_URL_OVERRIDE:-https://docs.minijam.xyz}" >> "$GITHUB_ENV"
           echo "BASE_URL=${BASE_URL_OVERRIDE:-/}" >> "$GITHUB_ENV"
 
       - name: Setup Node.js
