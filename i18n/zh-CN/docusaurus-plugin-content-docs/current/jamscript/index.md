@@ -1,51 +1,71 @@
 ---
 title: JamScript 概览
-description: 使用 JamScript 0.2 工具链构建确定性的 JAM Service。
+description: 使用 JamScript 应用开发栈构建确定性的 JAM 应用。
 slug: /jamscript
 ---
 
 # JamScript
 
-JamScript 是用于构建确定性 JAM Service 的 TypeScript 风格语言和工具链。
-你在 `service.ts` 中描述 action、有界数据和托管状态，`jams` 会把项目编译为
-PolkaVM/JAM 产物。
+JamScript 是面向 JAM Service 的确定性应用开发栈。
 
-```text
-service.ts → 类型元数据 + ScriptC M2 → 生成的 runtime → JamV1 PVM/blob
-```
+它不仅包含 TypeScript 风格语言，还包括编译器/工具链、应用 ABI、托管状态、所有权原语、部署、Backend 与 Client。目标是让应用开发者工作在 Service 层，而无需自行实现 JAM 执行管线。
 
-最重要的一点是：Service 可以被重复执行并得到同样的结果。结果只依赖签名
-action、锚定的托管状态和代码。Service 内没有浏览器、Node.js、文件系统、网络、
-时钟或随机数 API。
+~~~text
+service.ts
+   ↓
+JamScript compiler / managed toolchain
+   ↓
+Service PVM artifact + ABI
+   ↓
+显式部署
+   ↓
+MiniJAM Stage-1
+   ↓
+JamScript Backend
+   ↓
+typed client / frontend
+~~~
 
-## 从哪里开始
+## 各层职责
 
-| 你的目标 | 从这里开始 |
-|---|---|
-| 构建第一个 Service | [快速开始](./getting-started/quickstart.md) |
-| 逐行理解示例 | [第一个 Service](./getting-started/first-service.md) |
-| 安装 CLI 和工具链 | [安装](./getting-started/installation.md) |
-| 设计 action 和状态数据 | [类型与数据](./language/types-and-data.md) |
-| 理解持久化 | [状态](./language/state.md) |
-| 排查构建错误 | [支持的 JavaScript](./language/supported-javascript.md) 与 [项目配置](./tooling/configuration.md) |
+### Language 与 Toolchain
 
-## 一个够用的心智模型
+你在源码中描述 action、有界数据、query、认证和状态。公开命令是 **jams**。Canonical build 使用托管工具链，应用项目无需自行维护 Rust、LLVM、Node 或 MiniJAM checkout。
 
-- **action** 是用户或 client 调用的入口，声明认证方式和输入 schema。
-- **state map** 是由 Service 拥有、经过认证的持久化存储。读写通过生成的
-  state binding 完成。
-- **query** 描述 client 如何在 finalized state root 上读取一个状态值。它不
-  是额外的 PVM 入口。
-- **Refine** 在锚定的状态视图上验证并执行 action；**Accumulate** 接受结果
-  transition 并提交新的 state root，不会再次运行应用代码。
+从[快速开始](./getting-started/quickstart.md)入门。
 
-:::warning 当前预览边界
+### Application Runtime 与 Managed State
 
-目前唯一支持的源码路径是语言 `0.2` + ScriptC M2 backend，JamScript 整体仍未
-稳定。公开 ABI descriptor 比当前 M2 实际可执行的 codec 子集更宽；[类型与数据](./language/types-and-data.md)
-会明确说明两者的区别。
+JamScript 将应用状态组织为经过认证的托管状态，其规范 root 通过 Service 的链上状态进行 commitment。Refine 针对锚定状态视图验证执行；Accumulate 只接受有效 transition，并推进规范 commitment。
 
-:::
+请阅读[托管状态](./runtime/managed-state.md)。
 
-[MiniJAM 开发者指南](/docs/minijam/developers/quickstart)介绍下游网络和部署流程。
-编译 JamScript Service 不需要 MiniJAM checkout。
+### Ownership
+
+Ownership 是与特定链账户格式解耦的密码学控制原语。Polkadot、EVM、Matrix 等外部生态可以作为该原语的 adapter，而不需要变成新的共识账户类型。
+
+请阅读[所有权抽象](./ownership/index.md)。
+
+### Deployment
+
+构建与部署是两个独立操作。Service artifact 与网络解耦；部署时显式选择命名网络，并在创建 Service 前验证目标网络与 artifact。
+
+请阅读[部署](./deployment/index.md)。
+
+### Backend 与 Client
+
+JamScript Backend 是面向应用的 JAM-compatible network bridge。它不是共识的一部分，也不是 Formal RPC。它负责状态 materialization、执行输入构造/验证、通过网络路径提交 Work，以及提供面向 Client 的状态 API。
+
+Client 可以使用便利查询，也可以选择 proof-backed 独立状态验证。
+
+请阅读 [Backend](./backend/index.md) 与 [Client](./client/index.md)。
+
+## 信任模型
+
+Backend 可以让应用访问更方便，但不会因此成为规范性来源。规范 managed-state root 由 finalized Service state 选择；Refine proof 与 Accumulate root check 则独立保护执行边界。
+
+## Preview 边界
+
+JamScript 仍处于 developer preview。已发布 toolchain 与 main 分支可能以不同速度演进。对于具体 build，应以 release artifact、build metadata 与源仓库 compatibility 文档为准。
+
+请阅读 [JamScript 兼容性](./reference/compatibility.md)与全站[真相源规则](../reference/compatibility.md)。

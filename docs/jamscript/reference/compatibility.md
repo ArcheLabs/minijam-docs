@@ -1,48 +1,38 @@
 ---
-title: JamScript Compatibility Matrix
-description: The current Formal V1 and JamV1 toolchain baseline.
+title: JamScript Compatibility
+description: How to pin a released JamScript build without confusing release and main-branch protocol state.
 ---
 
-# JamScript Compatibility Matrix
+# JamScript Compatibility
 
-This is the baseline embedded by the current JamScript toolchain distribution.
-For a particular build, `build.json` and the bundle manifest are authoritative.
+JamScript has several independently evolving boundaries: source language, compiler backend, target/SDK ABI, signed-action protocol, managed-state protocol, backend/client protocol, and downstream MiniJAM compatibility.
 
-| Component | Verified baseline |
-|---|---|
-| Public CLI | `jams`, workspace version `0.1.0` |
-| Source language | `0.2` |
-| Backend | `scriptc-m2` |
-| ScriptC | `0.0.34`, revision `d7b4480` |
-| TypeScript | `7.0.2` |
-| Node.js | `24.15.0` |
-| Rust | `nightly-2026-05-02` |
-| Clang/LLVM | `20.1.8` official Linux distribution |
-| PolkaVM linker | `0.30.0` |
-| JAM target | `jam-v1` |
-| JAM blob encoder | `0.1.28` |
-| Application / managed state ABI | `1` / `1` |
-| Signed action | `SignedActionV1` |
-| Managed-state protocol/layout | `1` / `1` |
+A single hand-copied table on this website is therefore not authoritative.
 
-## MiniJAM relationship
+## For a released build
 
-JamScript targets its JamV1 boundary and does not require MiniJAM or Jambda to
-compile a Service. MiniJAM is a downstream consumer used for network execution,
-deployment, and live compatibility checks. A MiniJAM node revision can change
-without changing the JamScript language or application ABI, but the downstream
-workflow must still use a compatible target/runtime baseline.
+For a particular artifact, keep and trust:
 
-## Reproducibility checklist
+- the JamScript release identity;
+- the project manifest and Service identity;
+- generated Service ABI;
+- build metadata and checksums;
+- protocol/build evidence shipped with the artifact.
 
-When sharing an artifact, keep:
+The selected release assets and generated build metadata define what was actually used.
 
-- the JamScript source revision;
-- `jamscript.toml` and `.jamscript/service.json`;
-- the generated `service.abi.json`;
-- `build.json`, `protocol-v0.json`, and `checksums.json`;
-- the CLI/toolchain release identity.
+## For network compatibility
 
-Changing a source type, record field order, enum index, action name/selector,
-state schema, codec, or target version requires an explicit compatibility and
-state-migration review.
+JamScript compilation does not require MiniJAM or Jambda. MiniJAM is a downstream deployment/execution target, so network compatibility must be checked separately.
+
+Use:
+
+- [JamScript releases](https://github.com/ArcheLabs/JamScript/releases)
+- [JamScript MiniJAM compatibility notes](https://github.com/ArcheLabs/JamScript/blob/main/docs/minijam-spec-compatibility.md)
+- [MiniJAM compatibility matrix](https://github.com/ArcheLabs/minijam-client/blob/main/docs/compatibility-matrix.md)
+
+## Main is not a release
+
+The main branch can contain newer language/runtime work than the latest published CLI/toolchain. Do not mix a main-branch protocol description with an older release artifact unless that compatibility is explicitly tested.
+
+Changing a boundary type, field order, action selector, state schema, codec, signing protocol, managed-state version, or target requires an explicit compatibility/migration review.
