@@ -71,7 +71,7 @@ const sidebars: SidebarsConfig = {
       'ecosystem/incentive-protocol',
       'ecosystem/tokenomics',
     ]},
-    {type: 'category', label: 'Reference', collapsed: true, items: ['reference/compatibility']},
+    {type: 'category', label: 'Compatibility', collapsed: true, items: ['reference/compatibility']},
   ],
 };
 
