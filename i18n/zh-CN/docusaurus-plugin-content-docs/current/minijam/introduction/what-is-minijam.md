@@ -7,9 +7,11 @@ sidebar_position: 1
 
 # 什么是 MiniJAM？
 
-MiniJAM 是一个简化的 JAM 实现，用于在正式 JAM 环境成熟之前，提前实施 JAM 并建设通用生态，使得开发者能借助 JAM 独有的能力扩展 Web3 的边界。MiniJAM 尽可能地保留了 JAM 的相关语义和流程：
+MiniJAM 是一个独立网络，用于在更完整的 JAM 环境成熟之前运行一个边界明确的 JAM-compatible 执行模型。
 
-```
+当前支持的实现线是 **Stage-1**。MiniJAM 目前使用 Polkadot SDK 链作为宿主环境，并使用 Jambda 提供 JAM 执行组件，同时明确区分网络 profile、执行边界和应用 ABI。
+
+~~~text
 Service Code
     ↓
 Work Package
@@ -18,46 +20,33 @@ Refine
     ↓
 Work Report
     ↓
-Independent Verification
+验证 / 投票
     ↓
 Accumulate
     ↓
-State Update
-```
+规范状态转换
+~~~
+
+## MiniJAM 不是什么
+
+MiniJAM 不等同于历史 Stage-0 Playground。Playground 对早期验证很重要，但已经不再定义 MiniJAM 的产品边界。
+
+MiniJAM 也不是 JAM TinySpec 或 JAM FullSpec。网络拥有自己的规范 profile：**MiniJamSpec**，并明确区分网络常量、Runtime policy、Worker 本地策略与应用 ABI。
+
+请阅读 [MiniJamSpec](../architecture/minijam-spec.md) 与[执行边界](../architecture/execution-boundary.md)。
 
 ## 为什么需要 MiniJAM
 
-JAM 的协议实现、开发工具和应用生态需要较长时间才能成熟。MiniJAM 希望将这些工作提前，让开发者现在就可以开始建设：
+JAM 协议实现、开发工具和应用生态的成熟速度并不相同。MiniJAM 允许我们更早建设和验证应用与基础设施，同时保留向更完整 JAM 兼容环境迁移的路径。
 
-- Service；
-- SDK 和编译工具；
-- Playground 和调试工具；
-- Worker 和数据基础设施；
-- 钱包、浏览器和应用。
+## 与 JamScript 的关系
 
-这样，JAM 的到来可以成为一次渐进式升级，使得其正式上线时，已经拥有成熟的生态和应用。
+MiniJAM 提供网络，JamScript 提供推荐的应用开发栈。
 
-## 与 JAM 的关系
-
-MiniJAM 保留了 Service、PVM、Refine、Work Report、Accumulate 和 HostCall 等 JAM 核心概念和状态转换流程，但没有实现完整共识机制。
-
-MiniJAM 当前使用基于 Polkadot SDK 的宿主环境提供区块、最终性、Runtime、历史状态和 RPC。这是当前阶段的实现方式，不是 MiniJAM 的永久产品定义。
-
-MiniJAM 的 SDK、工具和基础设施应尽可能围绕通用 JAM 概念设计，使其未来能够继续服务于正式 JAM。
-
-请参阅 MiniJAM 与 JAM，了解当前实现范围和兼容性边界。
+应用开发者通常应从 [JamScript](../../jamscript/index.md) 开始；Node、Worker、基础设施和协议开发者则从 MiniJAM 开始。
 
 ## 长期方向
 
-正式 JAM 成熟后，MiniJAM 将作为 JAM 的 L2 而存在。长期目标是：
+长期方向仍然是：随着 JAM 成熟，让应用和工具边界继续可复用，使适合的 Service 能够迁移，并在有价值的场景中让 MiniJAM 继续作为专用网络或 JAM-connected/L2 执行环境存在。
 
-- 让部分 Service 迁移到 JAM；
-- 让 SDK、编译器和开发工具继续服务 JAM；
-- 让现有应用和基础设施保持可复用；
-- 让 MiniJAM 继续作为 JAM 的 L2 或专用执行环境运行。
-
-## 已知问题和边界
-
-- 仓库的完整 Runtime 和 Node 构建需要私有 Jambda ，因此你无法在本地编译，因此当前尚不适合实施多客户端。
-- Stage 0 未实现 JAM assurance、完整 availability、全局 disputes、judgments 或生产级持久性。
-- 经济参数和管理权限仍属于临时性配置。
+这是长期方向，并不意味着 MiniJAM 今天已经实现完整 JAM 协议。

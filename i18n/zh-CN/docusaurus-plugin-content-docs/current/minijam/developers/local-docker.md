@@ -1,51 +1,35 @@
 ---
 title: 使用 Docker 在本地运行 MiniJAM
-description: 启动公开、基于镜像的 MiniJAM 本地开发网络。
+description: 使用不可变 release image 启动当前支持的 MiniJAM Stage-1 本地网络。
 ---
 
 # 使用 Docker 在本地运行 MiniJAM
 
-MiniJAM 提供了一个基于预构建 Docker 镜像的本地开发网络。你不需要编译 MiniJAM、Jambda 或任何 Rust、Node.js 项目。
+Stage-1 本地开发使用已发布的 MiniJAM aggregate image，不需要在本地编译 Rust，也不要求 Docker Compose。
 
-## 环境要求
+## 要求
 
-运行本地网络需要：
+- Docker Engine 或 Docker Desktop
+- 来自匹配 release 的不可变 MiniJAM aggregate image digest
 
-* Docker Engine 或 Docker Desktop
-* Docker Compose v2
-* Bash、`tar` 和 `sha256sum`
+## 启动网络
 
-在 Windows 上，建议通过启用了 Docker Desktop 集成的 WSL2 运行以下命令。
+~~~bash
+docker run --rm \
+  -p 9944:9944 -p 8080:8080 \
+  ghcr.io/archelabs/minijam@sha256:<digest> --dev
+~~~
 
-## 下载并启动
+Aggregate image 包含本地 launcher，以及 Stage-1 Node、一个 Worker 和 Formal RPC。
 
-从 MiniJAM GitHub Release 下载以下两个文件：
+Image digest 是可复现部署身份的一部分。在可复现性或 release 检查中，不要用会移动的未固定 tag 替代 digest。
 
-```text
-minijam-local-<tag>.tar.gz
-minijam-local-<tag>.tar.gz.sha256
-```
+## Stage-1 角色
 
-确保两个文件位于同一目录，然后执行：
+- **Node：** 链、Runtime、最终性与安全 Node RPC。
+- **Worker：** 使用独立签名身份执行链下 Refine。
+- **Formal RPC：** 应用中立的 Work ingress 与 Bundle gateway。
 
-```bash
-sha256sum -c minijam-local-<tag>.tar.gz.sha256
-tar -xzf minijam-local-<tag>.tar.gz
-cd minijam-local-<tag>
-./minijam-local up
-```
+可选 Service compiler 不属于 Stage-1 runtime network。JamScript 维护自己的 compiler/toolchain 分发。
 
-启动脚本会：
-
-1. 检查 Docker 和 Docker Compose；
-2. 验证所有镜像均固定到不可变的 SHA-256 digest；
-3. 拉取所需镜像；
-4. 启动 MiniJAM Node、Compiler、Playground、三个 Worker 和 Web 前端；
-5. 等待所有服务进入健康状态。
-
-启动完成后，打开：
-
-* Playground：http://127.0.0.1:4173
-* Node RPC：http://127.0.0.1:9944
-
-你可以使用 Playground 提供的 Web UI 或者通过 Node RPC 进行交互。
+公开或多主机部署请以规范 [Stage-1 Docker deployment guide](https://github.com/ArcheLabs/minijam-client/blob/main/docs/docker-deployment.md) 为准。
