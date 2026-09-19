@@ -23,3 +23,5 @@ Before pinning a deployment, check:
 - [JamScript MiniJAM compatibility notes](https://github.com/ArcheLabs/JamScript/blob/main/docs/minijam-spec-compatibility.md)
 
 Repository main branches may contain work newer than the latest public release. Use the selected release artifacts and their matching compatibility information for reproducible deployments.
+
+This page intentionally avoids pinning moving main-branch version numbers; release-specific compatibility belongs to the selected release evidence.
