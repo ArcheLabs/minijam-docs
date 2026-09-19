@@ -4,7 +4,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
   title: 'MiniJAM Documentation',
-  tagline: 'Documentation for MiniJAM, JamScript, and the MiniJAM ecosystem.',
+  tagline: 'MiniJAM network, JamScript application stack, and the MINI ecosystem.',
   favicon: 'img/logo.svg',
   url: process.env.SITE_URL ?? 'https://docs.minijam.xyz',
   baseUrl: process.env.BASE_URL ?? '/',
@@ -42,7 +42,7 @@ const config: Config = {
         {type: 'doc', docId: 'index', label: 'Documentation', position: 'left'},
         {type: 'doc', docId: 'minijam/index', label: 'MiniJAM', position: 'left'},
         {type: 'doc', docId: 'jamscript/index', label: 'JamScript', position: 'left'},
-        {type: 'doc', docId: 'ecosystem/incentive-protocol', label: 'Ecosystem', position: 'left'},
+        {type: 'doc', docId: 'ecosystem/index', label: 'MINI Ecosystem', position: 'left'},
         {href: 'https://github.com/ArcheLabs/minijam-docs', label: 'GitHub', position: 'right'},
         {type: 'localeDropdown', position: 'right'},
       ],
@@ -51,14 +51,15 @@ const config: Config = {
       style: 'dark',
       links: [
         {title: 'Documentation', items: [
+          {label: 'Architecture', to: '/docs/architecture'},
           {label: 'MiniJAM', to: '/docs/minijam'},
           {label: 'JamScript', to: '/docs/jamscript'},
-          {label: 'Ecosystem', to: '/docs/incentive-protocol'},
+          {label: 'MINI Ecosystem', to: '/docs/ecosystem'},
         ]},
         {title: 'Developers', items: [
           {label: 'JamScript Quickstart', to: '/docs/jamscript/getting-started/quickstart'},
-          {label: 'MiniJAM Playground', to: '/docs/minijam/developers/quickstart'},
-          {label: 'GitHub', href: 'https://github.com/ArcheLabs'},
+          {label: 'Run MiniJAM locally', to: '/docs/minijam/developers/local-docker'},
+          {label: 'Stage-0 archive', to: '/docs/archive/stage-0-playground'},
         ]},
         {title: 'Project', items: [
           {label: 'Documentation repository', href: 'https://github.com/ArcheLabs/minijam-docs'},

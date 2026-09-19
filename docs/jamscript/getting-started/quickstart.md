@@ -1,52 +1,29 @@
 ---
 title: JamScript Quickstart
-description: Create, check, and build a JamScript 0.2 Service.
+description: Create, check, build, and prepare to deploy a JamScript Service.
 ---
 
 # JamScript Quickstart
 
-This walkthrough creates a small counter Service, checks its ABI, builds a
-JamV1 PVM artifact, and verifies the resulting bundle. The example uses a
-`u32` counter because it is supported by the current ScriptC M2 executable
-codec.
+This walkthrough creates a small counter Service, checks its ABI, builds a PVM artifact, and verifies the resulting bundle. The example intentionally uses the conservative executable subset supported by the selected release line.
 
 ## 1. Install the CLI
 
-For a published release, use the `jams` binary and run
-`jams toolchain install` once. From the repository checkout, follow the
-[contributor installation](./installation.md#repository-checkout-contributor-mode)
-and use `./target/debug/jams` below.
-
-```bash
-cd JamScript
-export JAMSCRIPT_DEV_TOOLCHAIN=1
-```
+For a published release, install the **jams** CLI and its managed toolchain. See [Installation](./installation.md).
 
 ## 2. Create a project
 
-```bash
-./target/debug/jams new hello-jam
-./target/debug/jams check hello-jam
-./target/debug/jams abi hello-jam
-```
+~~~bash
+jams new hello-jam
+jams check hello-jam
+jams abi hello-jam
+~~~
 
-`new` creates:
+The project includes a manifest, Service source, and a persistent Service identity file. Keep the identity with the project: regenerating it creates a different logical Service identity.
 
-```text
-hello-jam/
-├── jamscript.toml
-├── src/service.ts
-└── .jamscript/service.json
-```
+## 3. Add a counter Service
 
-The identity file contains a generated `serviceKey` and `instanceId`. Keep it
-with the project: changing it creates a different Service identity.
-
-## 3. Use a buildable first Service
-
-Replace `hello-jam/src/service.ts` with this example:
-
-```ts
+~~~ts
 import { action, wallet, stateMap, query, address, u32 } from "jam";
 
 const counters = stateMap({
@@ -68,65 +45,43 @@ export const increment = action({
 });
 
 export const getCounter = query(counters);
-```
+~~~
 
-The action changes managed state; it does not return a value. In the current M2
-service path, ScriptC action output is `unit`, so clients read the resulting
-counter through `getCounter` after the Work is finalized.
+Run checks again:
 
-Check the project again:
+~~~bash
+jams check hello-jam
+jams abi hello-jam
+~~~
 
-```bash
-./target/debug/jams check hello-jam
-./target/debug/jams abi hello-jam
-```
+## 4. Build and validate
 
-## 4. Build the Service
+Configure the management controller required by your selected release/project policy, then build:
 
-The default `deployer` management mode needs a 32-byte wallet public key. Use
-the account that will control management operations, not the Service key:
-
-```bash
-export JAMSCRIPT_DEPLOYER_ACCOUNT=0xYOUR_64_HEX_CHARACTER_PUBLIC_KEY
-./target/debug/jams build hello-jam --output hello-jam/dist
-```
-
-With a published CLI, the equivalent command is:
-
-```bash
+~~~bash
 jams build hello-jam --output hello-jam/dist --offline
-```
+jams inspect hello-jam/dist
+jams run hello-jam/dist/service.pvm
+~~~
 
-The build output contains the executable artifacts and their metadata:
+**run** is a deterministic local PVM validation aid. It is not network deployment.
 
-```text
-service.elf
-service.polkavm
-service.pvm
-service.blob
-service.abi.json
-build.json
-protocol-v0.json
-builder.json
-checksums.json
-generated_service.rs
-generated_builder_application.rs
-```
+## 5. Deploy explicitly
 
-Inspect the bundle and run the local PVM validation aid:
+Deployment is a separate step. Configure a named MiniJAM network, inspect it, and deploy the already-built artifact:
 
-```bash
-./target/debug/jams inspect hello-jam/dist
-./target/debug/jams run hello-jam/dist/service.pvm
-```
+~~~bash
+jams network list
+jams network show local
+jams deploy hello-jam --network local --artifact hello-jam/dist
+~~~
 
-`inspect` verifies the bundle checksums. `run` executes the artifact with the
-deterministic local interpreter; it is not a network deployment command.
+Do not copy generic RPC ports blindly: use the endpoints and genesis identity supplied by the matching Stage-1/release environment.
 
-:::info Deployment is a separate step
+Continue with [Deployment](../deployment/index.md), then use the [Backend](../backend/index.md) and [Client](../client/index.md) for application access.
 
-JamScript produces the Service artifact. Submitting Work, waiting for
-finalization, and querying the finalized state belong to the MiniJAM/client
-workflow described in the [MiniJAM developer guide](/docs/minijam/developers/quickstart).
+:::info Stage-0 Playground
+
+The historical browser Playground is no longer the default JamScript/MiniJAM development path. It is kept under the MiniJAM legacy documentation.
 
 :::

@@ -1,51 +1,35 @@
 ---
 title: Run MiniJAM locally with Docker
-description: Start the public, image-based MiniJAM local development network.
+description: Start the supported MiniJAM Stage-1 local network from an immutable release image.
 ---
 
 # Run MiniJAM locally with Docker
 
-MiniJAM provides a local development network based on prebuilt Docker images. You do not need to compile MiniJAM, Jambda, or any Rust or Node.js project.
+Stage-1 local development uses the published aggregate MiniJAM image. It does not require a local Rust build or Docker Compose.
 
 ## Requirements
 
-Running the local network requires:
+- Docker Engine or Docker Desktop
+- an immutable MiniJAM aggregate image digest from a matching release
 
-* Docker Engine or Docker Desktop
-* Docker Compose v2
-* Bash, `tar`, and `sha256sum`
+## Start the network
 
-On Windows, run the following commands through WSL2 with Docker Desktop integration enabled.
+~~~bash
+docker run --rm \
+  -p 9944:9944 -p 8080:8080 \
+  ghcr.io/archelabs/minijam@sha256:<digest> --dev
+~~~
 
-## Download and Start
+The aggregate image contains the local launcher plus the Stage-1 node, one Worker, and Formal RPC.
 
-Download the following two files from the MiniJAM GitHub Release:
+The image digest is part of the reproducible deployment identity. Do not replace it with an unpinned moving tag in reproducibility or release checks.
 
-```text
-minijam-local-<tag>.tar.gz
-minijam-local-<tag>.tar.gz.sha256
-```
+## Stage-1 roles
 
-Make sure both files are in the same directory, then run:
+- **Node:** chain, Runtime, finality, and safe node RPC.
+- **Worker:** off-chain Refine execution with its own signing identity.
+- **Formal RPC:** application-neutral Work ingress and bundle gateway.
 
-```bash
-sha256sum -c minijam-local-<tag>.tar.gz.sha256
-tar -xzf minijam-local-<tag>.tar.gz
-cd minijam-local-<tag>
-./minijam-local up
-```
+The optional Service compiler is not part of the Stage-1 runtime network. JamScript owns its own compiler/toolchain distribution.
 
-The startup script will:
-
-1. check Docker and Docker Compose;
-2. verify that all images are pinned to immutable SHA-256 digests;
-3. pull the required images;
-4. start the MiniJAM Node, Compiler, Playground, three Workers, and Web frontend;
-5. wait until all services are healthy.
-
-After startup completes, open:
-
-* Playground: http://127.0.0.1:4173
-* Node RPC: http://127.0.0.1:9944
-
-You can interact through the Playground Web UI or through Node RPC.
+For public or multi-host deployment, use the canonical [Stage-1 Docker deployment guide](https://github.com/ArcheLabs/minijam-client/blob/main/docs/docker-deployment.md).

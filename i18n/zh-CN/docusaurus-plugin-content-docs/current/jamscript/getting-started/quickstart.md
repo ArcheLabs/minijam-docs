@@ -1,50 +1,29 @@
 ---
 title: JamScript 快速开始
-description: 创建、检查并构建 JamScript 0.2 Service。
+description: 创建、检查、构建并准备部署 JamScript Service。
 ---
 
 # JamScript 快速开始
 
-本教程创建一个小型 counter Service，检查它的 ABI，构建 JamV1 PVM 产物，并
-校验生成的 bundle。示例使用 `u32`，因为它属于当前 ScriptC M2 可执行 codec
-支持的边界类型。
+本教程创建一个小型 counter Service，检查 ABI，构建 PVM artifact，并校验 bundle。示例有意使用所选择 release line 中更保守、可执行的类型子集。
 
 ## 1. 安装 CLI
 
-如果使用已发布版本，使用 `jams` binary 并运行一次 `jams toolchain install`。
-如果从仓库 checkout 开始，请先完成[开发者安装](./installation.md#仓库-checkout开发者模式)，
-下面使用 `./target/debug/jams`。
-
-```bash
-cd JamScript
-export JAMSCRIPT_DEV_TOOLCHAIN=1
-```
+对于公开 release，请安装 **jams** CLI 与其 managed toolchain。参阅[安装](./installation.md)。
 
 ## 2. 创建项目
 
-```bash
-./target/debug/jams new hello-jam
-./target/debug/jams check hello-jam
-./target/debug/jams abi hello-jam
-```
+~~~bash
+jams new hello-jam
+jams check hello-jam
+jams abi hello-jam
+~~~
 
-`new` 会创建：
+项目包含 manifest、Service 源码与持久化 Service identity 文件。请把 identity 与项目一起保存；重新生成它意味着创建另一个逻辑 Service identity。
 
-```text
-hello-jam/
-├── jamscript.toml
-├── src/service.ts
-└── .jamscript/service.json
-```
+## 3. 添加 Counter Service
 
-identity 文件包含自动生成的 `serviceKey` 和 `instanceId`。请和项目一起保管；
-更换它就相当于创建了另一个 Service identity。
-
-## 3. 使用当前可构建的 Service
-
-将 `hello-jam/src/service.ts` 替换为：
-
-```ts
+~~~ts
 import { action, wallet, stateMap, query, address, u32 } from "jam";
 
 const counters = stateMap({
@@ -66,63 +45,43 @@ export const increment = action({
 });
 
 export const getCounter = query(counters);
-```
+~~~
 
-action 修改托管状态，而不是返回值。当前 M2 Service 路径中，ScriptC action
-输出是 `unit`；Work finalized 后，client 通过 `getCounter` 读取 counter。
+再次检查：
 
-再次检查项目：
+~~~bash
+jams check hello-jam
+jams abi hello-jam
+~~~
 
-```bash
-./target/debug/jams check hello-jam
-./target/debug/jams abi hello-jam
-```
+## 4. 构建与验证
 
-## 4. 构建 Service
+根据所选择 release/project policy 配置管理控制者，然后构建：
 
-默认的 `deployer` management mode 需要 32-byte wallet public key。这里应该填写
-拥有管理权限的 account，不是 Service key：
-
-```bash
-export JAMSCRIPT_DEPLOYER_ACCOUNT=0xYOUR_64_HEX_CHARACTER_PUBLIC_KEY
-./target/debug/jams build hello-jam --output hello-jam/dist
-```
-
-使用已发布 CLI 时，对应命令是：
-
-```bash
+~~~bash
 jams build hello-jam --output hello-jam/dist --offline
-```
+jams inspect hello-jam/dist
+jams run hello-jam/dist/service.pvm
+~~~
 
-构建输出包括可执行产物和 metadata：
+**run** 是确定性的本地 PVM validation aid，不是网络部署命令。
 
-```text
-service.elf
-service.polkavm
-service.pvm
-service.blob
-service.abi.json
-build.json
-protocol-v0.json
-builder.json
-checksums.json
-generated_service.rs
-generated_builder_application.rs
-```
+## 5. 显式部署
 
-检查 bundle，并使用本地 PVM validation aid：
+部署是独立步骤。配置命名 MiniJAM 网络，先检查网络，再部署已经构建好的 artifact：
 
-```bash
-./target/debug/jams inspect hello-jam/dist
-./target/debug/jams run hello-jam/dist/service.pvm
-```
+~~~bash
+jams network list
+jams network show local
+jams deploy hello-jam --network local --artifact hello-jam/dist
+~~~
 
-`inspect` 会校验 bundle checksums；`run` 使用确定性的本地 interpreter 执行产物，
-它不是网络部署命令。
+不要盲目复制通用教程中的 RPC 端口；应使用匹配 Stage-1/release 环境提供的 endpoint 与 genesis identity。
 
-:::info 部署是独立步骤
+接着阅读[部署](../deployment/index.md)，并通过 [Backend](../backend/index.md) 与 [Client](../client/index.md)连接应用。
 
-JamScript 负责生成 Service artifact。提交 Work、等待 finalized 以及查询 finalized
-state 属于 MiniJAM/client 流程，见 [MiniJAM 开发者指南](/docs/minijam/developers/quickstart)。
+:::info Stage-0 Playground
+
+历史浏览器 Playground 已不再是默认 JamScript/MiniJAM 开发路径，相关资料保留在 MiniJAM Legacy 文档中。
 
 :::

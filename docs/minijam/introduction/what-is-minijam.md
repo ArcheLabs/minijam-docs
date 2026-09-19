@@ -7,57 +7,46 @@ sidebar_position: 1
 
 # What is MiniJAM?
 
-MiniJAM is a simplified JAM implementation. It is used to implement JAM early and build a general ecosystem before the formal JAM environment matures, giving developers access to JAM's distinctive capabilities to expand what Web3 can do. MiniJAM preserves JAM-related semantics and flows as much as possible:
+MiniJAM is an independent network for running a deliberately bounded JAM-compatible execution model before the broader JAM environment is available.
 
-```text
-Service Code
-    v
+The supported implementation line is **Stage-1**. MiniJAM currently uses a Polkadot SDK chain as its host environment and Jambda for JAM execution components, while keeping the network profile, execution boundary, and application ABI explicit.
+
+~~~text
+Service code
+    ↓
 Work Package
-    v
+    ↓
 Refine
-    v
+    ↓
 Work Report
-    v
-Independent Verification
-    v
+    ↓
+verification / voting
+    ↓
 Accumulate
-    v
-State Update
-```
+    ↓
+canonical state transition
+~~~
 
-## Why MiniJAM Is Needed
+## What MiniJAM is not
 
-JAM's protocol implementation, developer tools, and application ecosystem will take time to mature. MiniJAM brings that work forward so developers can start building now:
+MiniJAM is not the historical Stage-0 Playground, although that environment was useful for early validation.
 
-- Services;
-- SDKs and compilation tools;
-- Playground and debugging tools;
-- Worker and data infrastructure;
-- wallets, explorers, and applications.
+MiniJAM is also not JAM TinySpec or JAM FullSpec. The network has its own canonical profile, **MiniJamSpec**, and deliberately separates network constants, Runtime policy, Worker-local policy, and the application ABI.
 
-This allows JAM's arrival to become a gradual upgrade. When JAM formally launches, it can already have a mature ecosystem and applications.
+See [MiniJamSpec](../architecture/minijam-spec.md) and [Execution Boundary](../architecture/execution-boundary.md).
 
-## Relationship with JAM
+## Why MiniJAM exists
 
-MiniJAM preserves JAM core concepts and state-transition flows such as Service, PVM, Refine, Work Report, Accumulate, and HostCall, but it does not implement the full consensus mechanism.
+JAM protocol implementations, developer tooling, and applications mature on different timelines. MiniJAM allows the application and infrastructure ecosystem to be built and tested earlier while preserving a path toward broader JAM compatibility.
 
-MiniJAM currently uses a Polkadot SDK-based host environment to provide blocks, finality, Runtime, historical state, and RPC. This is the current-stage implementation approach, not MiniJAM's permanent product definition.
+## Relationship with JamScript
 
-MiniJAM SDKs, tools, and infrastructure should be designed around general JAM concepts as much as possible, so they can continue serving formal JAM in the future.
+MiniJAM provides the network. JamScript provides the recommended application stack.
 
-See MiniJAM and JAM for the current implementation scope and compatibility boundaries.
+Application developers normally start with [JamScript](../../jamscript/index.md), while node, Worker, infrastructure, and protocol developers start with MiniJAM.
 
-## Long-Term Direction
+## Long-term direction
 
-After formal JAM matures, MiniJAM will exist as a JAM L2. The long-term goals are:
+The long-term direction remains to keep application and tooling boundaries useful as JAM matures, allow suitable Services to migrate, and let MiniJAM continue as a specialized or JAM-connected/L2 execution environment where that model remains useful.
 
-- allow some Services to migrate to JAM;
-- keep SDKs, compilers, and developer tools serving JAM;
-- keep existing applications and infrastructure reusable;
-- continue running MiniJAM as a JAM L2 or dedicated execution environment.
-
-## Known Issues and Boundaries
-
-- The repository's full Runtime and Node build depends on private Jambda, so you cannot compile it locally. This means the current stage is not yet suitable for multi-client implementation.
-- Stage 0 does not implement JAM assurance, full availability, global disputes, judgments, or production-grade persistence.
-- Economic parameters and administrative permissions are still temporary configuration.
+This is a direction, not a claim that MiniJAM implements the full JAM protocol today.

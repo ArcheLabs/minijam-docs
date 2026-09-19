@@ -5,21 +5,51 @@ slug: /
 sidebar_position: 1
 ---
 
-# Documentation
+# MiniJAM Documentation
 
-MiniJAM provides a JAM-compatible environment for building and testing Services today. JamScript is a separate language and toolchain for compiling deterministic TypeScript-based Services to PVM programs.
+MiniJAM is the network and execution environment. JamScript is the application stack for building deterministic JAM Services. MINI is the ecosystem and economic layer that coordinates participation, incentives, and long-term network development.
 
-## Build
+These three layers are related, but they are not the same protocol boundary.
 
-### [MiniJAM](./minijam/index.md)
+## Start here
 
-Learn the execution environment, network architecture, Service workflow, deployment, and [Playground](./minijam/developers/quickstart.md).
+### [Build an application with JamScript](./jamscript/index.md)
 
-### [JamScript](./jamscript/index.md)
+Use JamScript when you want to write a Service, define actions and managed state, build a PVM artifact, deploy it, connect a frontend, or use ownership abstraction.
 
-Start with the [JamScript Quickstart](./jamscript/getting-started/quickstart.md), then explore the [language reference](./jamscript/language/language-overview.md) and [supported JavaScript](./jamscript/language/supported-javascript.md).
+### [Understand or run MiniJAM](./minijam/index.md)
 
-## Ecosystem
+Use MiniJAM documentation for the Stage-1 network model, MiniJamSpec, Worker behavior, Formal RPC, execution boundaries, or local/network deployment.
 
-- [Incentive Protocol](./ecosystem/incentive-protocol.md): proposed markets and public-goods incentives.
-- [MINI Tokenomics](./ecosystem/tokenomics.md): allocation, launch, liquidity, and network economics.
+### [Understand the MINI ecosystem](./ecosystem/index.md)
+
+MINI remains a first-class part of the project. Its documentation covers ecosystem incentives, token economics, project markets, public goods, and future governance mechanisms. Those mechanisms can evolve without redefining MiniJAM consensus or the JamScript application ABI.
+
+## Default application path
+
+~~~text
+JamScript source
+    ↓
+jams build
+    ↓
+Service artifact
+    ↓
+MiniJAM Stage-1
+    ↓
+JamScript backend / client
+    ↓
+Application
+~~~
+
+See [Architecture at a Glance](./architecture.md) for the full relationship.
+
+The historical Stage-0 Playground is no longer the default development path. It remains available under [Legacy Stage-0](./archive/stage-0-playground.md).
+
+## Source of truth
+
+This site is the explanation and onboarding layer. Protocol facts are owned by the implementation repositories:
+
+- MiniJAM network/execution: [ArcheLabs/minijam-client](https://github.com/ArcheLabs/minijam-client)
+- JamScript language/runtime/backend: [ArcheLabs/JamScript](https://github.com/ArcheLabs/JamScript)
+
+See [Compatibility and Source of Truth](./reference/compatibility.md) before pinning protocol or ABI versions.
