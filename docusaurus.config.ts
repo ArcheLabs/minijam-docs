@@ -44,6 +44,7 @@ const config: Config = {
         {type: 'doc', docId: 'jamscript/index', label: 'JamScript', position: 'left'},
         {type: 'doc', docId: 'ecosystem/index', label: 'MINI Ecosystem', position: 'left'},
         {href: 'https://github.com/ArcheLabs/minijam-docs', label: 'GitHub', position: 'right'},
+        {href: 'https://x.com/archelabs_org', label: 'X', position: 'right'},
         {type: 'localeDropdown', position: 'right'},
       ],
     },
