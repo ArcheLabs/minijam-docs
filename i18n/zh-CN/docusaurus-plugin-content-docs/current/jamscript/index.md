@@ -1,71 +1,85 @@
 ---
 title: JamScript 概览
-description: 使用 JamScript 应用开发栈构建确定性的 JAM 应用。
+description: 使用接近 TypeScript 的开发体验构建 JAM Service。
 slug: /jamscript
 ---
 
 # JamScript
 
-JamScript 是面向 JAM Service 的确定性应用开发栈。
+JamScript 是用于构建 JAM Service 的 TypeScript-like 语言与工具链。它把 JAM/PVM
+底层细节封装在确定性的构建流程、typed application interface、managed state、
+Ownership、部署流程和 `jams` CLI 之后。
 
-它不仅包含 TypeScript 风格语言，还包括编译器/工具链、应用 ABI、托管状态、所有权原语、部署、Backend 与 Client。目标是让应用开发者工作在 Service 层，而无需自行实现 JAM 执行管线。
+## 安装
 
-~~~text
+```bash
+curl -fsSL https://install.minijam.xyz/jamscript | bash
+```
+
+installer 会自动选择最新发布的 JamScript 版本，并安装：
+
+- `jams` CLI；
+- 托管 compiler/toolchain；
+- 匹配的原生 JamScript Backend。
+
+当前原生 release 支持 Linux x86_64 和 macOS Apple Silicon。版本固定与手动安装请
+参阅[安装](./getting-started/installation.md)。
+
+```text
 service.ts
    ↓
 JamScript compiler / managed toolchain
    ↓
-Service PVM artifact + ABI
+service.pvm + service.blob + ABI
    ↓
 显式部署
    ↓
-MiniJAM Stage-1
+MiniJAM
    ↓
 JamScript Backend
    ↓
 typed client / frontend
-~~~
+```
 
-## 各层职责
+## Language 与 Toolchain
 
-### Language 与 Toolchain
-
-你在源码中描述 action、有界数据、query、认证和状态。公开命令是 **jams**。Canonical build 使用托管工具链，应用项目无需自行维护 Rust、LLVM、Node 或 MiniJAM checkout。
+应用开发者通过 JamScript 描述 action、有界数据、query、认证与状态。Canonical
+release build 使用托管工具链，因此应用项目不需要自行维护 Rust、LLVM、Node 或
+MiniJAM 源码 checkout。
 
 从[快速开始](./getting-started/quickstart.md)入门。
 
-### Application Runtime 与 Managed State
+## Managed State
 
-JamScript 将应用状态组织为经过认证的托管状态，其规范 root 通过 Service 的链上状态进行 commitment。Refine 针对锚定状态视图验证执行；Accumulate 只接受有效 transition，并推进规范 commitment。
+JamScript 为 Service 提供 typed managed state，并把应用执行连接到网络最终选择的
+finalized Service state。
 
 请阅读[托管状态](./runtime/managed-state.md)。
 
-### Ownership
+## Ownership
 
-Ownership 是与特定链账户格式解耦的密码学控制原语。Polkadot、EVM、Matrix 等外部生态可以作为该原语的 adapter，而不需要变成新的共识账户类型。
+Ownership 是与单一链账户格式解耦的密码学控制原语。不同生态可以通过兼容的
+Ownership/controller adapter 接入，而无需重新定义 JAM 共识账户模型。
 
 请阅读[所有权抽象](./ownership/index.md)。
 
-### Deployment
+## Deployment
 
-构建与部署是两个独立操作。Service artifact 与网络解耦；部署时显式选择命名网络，并在创建 Service 前验证目标网络与 artifact。
+构建与部署是独立操作。先构建 Service artifact，之后部署时再显式选择已配置网络。
 
 请阅读[部署](./deployment/index.md)。
 
-### Backend 与 Client
+## Backend 与 Client
 
-JamScript Backend 是面向应用的 JAM-compatible network bridge。它不是共识的一部分，也不是 Formal RPC。它负责状态 materialization、执行输入构造/验证、通过网络路径提交 Work，以及提供面向 Client 的状态 API。
-
-Client 可以使用便利查询，也可以选择 proof-backed 独立状态验证。
+JamScript Backend 是面向应用的网络 bridge。它不是共识，也不是 Formal RPC。
+Typed Client 通过 Backend 完成应用提交与状态访问。
 
 请阅读 [Backend](./backend/index.md) 与 [Client](./client/index.md)。
 
-## 信任模型
-
-Backend 可以让应用访问更方便，但不会因此成为规范性来源。规范 managed-state root 由 finalized Service state 选择；Refine proof 与 Accumulate root check 则独立保护执行边界。
-
 ## Preview 边界
 
-JamScript 仍处于 developer preview。已发布 toolchain 与 main 分支可能以不同速度演进。对于具体 build，应以 release artifact、build metadata 与源仓库 compatibility 文档为准。
+JamScript v0.1 当前仍是 RC/testnet developer preview。需要可复现性时应固定精确
+release，并把 `build.json`、Service ABI 与 Service identity 和部署 artifact
+一起保存。
 
-请阅读 [JamScript 兼容性](./reference/compatibility.md)与全站[真相源规则](../reference/compatibility.md)。
+请阅读[兼容性](./reference/compatibility.md)与[稳定性策略](./reference/stability.md)。

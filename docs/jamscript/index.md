@@ -1,71 +1,93 @@
 ---
 title: JamScript Overview
-description: Build deterministic JAM applications with the JamScript application stack.
+description: Build JAM Services with a TypeScript-like developer experience.
 slug: /jamscript
 ---
 
 # JamScript
 
-JamScript is a deterministic application stack for JAM Services.
+JamScript is a TypeScript-like language and toolchain for building JAM
+Services. It hides low-level JAM/PVM plumbing behind a deterministic build
+pipeline, typed application interfaces, managed state, Ownership, deployment,
+and the `jams` CLI.
 
-It includes a TypeScript-like source language, compiler/toolchain, application ABI, managed state, ownership primitives, deployment, backend, and client interfaces. The goal is to let application developers work at the Service level without implementing JAM execution plumbing themselves.
+## Install
 
-~~~text
+```bash
+curl -fsSL https://install.minijam.xyz/jamscript | bash
+```
+
+The installer selects the latest published JamScript release and installs:
+
+- the `jams` CLI;
+- the managed compiler/toolchain;
+- the matching native JamScript backend.
+
+Current native release platforms are Linux x86_64 and macOS Apple Silicon.
+See [Installation](./getting-started/installation.md) for version pinning and
+manual installation.
+
+```text
 service.ts
    ↓
 JamScript compiler / managed toolchain
    ↓
-Service PVM artifact + ABI
+service.pvm + service.blob + ABI
    ↓
 explicit deployment
    ↓
-MiniJAM Stage-1
+MiniJAM
    ↓
 JamScript backend
    ↓
 typed client / frontend
-~~~
+```
 
-## The layers
+## Language and toolchain
 
-### Language and toolchain
-
-You describe actions, bounded data, queries, authentication, and state in source code. The public command is **jams**. Canonical builds use a managed toolchain rather than requiring the application project to own Rust, LLVM, Node, or a MiniJAM checkout.
+Application developers describe actions, bounded data, queries, authentication,
+and state in JamScript. Canonical release builds use the managed toolchain
+instead of requiring each application project to maintain Rust, LLVM, Node, or
+a MiniJAM source checkout.
 
 Start with the [Quickstart](./getting-started/quickstart.md).
 
-### Application Runtime and Managed State
+## Managed state
 
-JamScript turns application state into authenticated managed state with a canonical root committed through the Service's chain state. Refine verifies execution against an anchored view; Accumulate accepts only valid transitions and advances the canonical commitment.
+JamScript provides typed managed state for Services and connects application
+execution to the finalized Service state selected by the network.
 
 See [Managed State](./runtime/managed-state.md).
 
-### Ownership
+## Ownership
 
-Ownership is a cryptographic control primitive that is deliberately separated from a specific chain account format. External ecosystems such as Polkadot, EVM, or Matrix can be adapters into that primitive without becoming new consensus account types.
+Ownership is a cryptographic control primitive separated from a single chain
+account format. Different ecosystems can be represented through compatible
+Ownership/controller adapters without redefining the JAM consensus account
+model.
 
 See [Ownership Abstraction](./ownership/index.md).
 
-### Deployment
+## Deployment
 
-Building and deploying are separate operations. A Service artifact is network-independent; deployment selects an explicit named network and verifies the target identity and artifact before creating the Service.
+Building and deployment are separate operations. A Service artifact is built
+first; deployment later selects an explicit configured network.
 
 See [Deployment](./deployment/index.md).
 
-### Backend and Client
+## Backend and Client
 
-The JamScript backend is the application-facing bridge to a JAM-compatible network. It is not part of consensus and it is not Formal RPC. It materializes state, builds/verifies the required execution inputs, submits Work through the network path, and serves client-facing state APIs.
-
-The client can use the backend in a convenience mode or request proof-backed state verification.
+The JamScript backend is an application-facing bridge to the network. It is not
+consensus and it is not Formal RPC. The typed client uses it for application
+submission and state access.
 
 See [Backend](./backend/index.md) and [Client](./client/index.md).
 
-## Trust model
-
-A backend can make application access easier, but it does not become the source of canonicality. Canonical managed-state roots are selected by finalized Service state. Refine proofs and Accumulate root checks protect the execution boundary independently from frontend convenience queries.
-
 ## Preview boundary
 
-JamScript is still a developer-preview stack. The released toolchain and the main branch may move at different speeds. For an exact build, treat release artifacts, build metadata, and the source repository's compatibility documents as authoritative.
+JamScript v0.1 is currently an RC/testnet developer preview. Pin an exact release
+when reproducibility matters, and keep `build.json`, the Service ABI, and
+Service identity with deployed artifacts.
 
-See [JamScript Compatibility](./reference/compatibility.md) and the site-wide [Source of Truth](../reference/compatibility.md).
+See [Compatibility](./reference/compatibility.md) and
+[Stability Policy](./reference/stability.md).

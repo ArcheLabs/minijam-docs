@@ -1,29 +1,44 @@
 ---
 title: JamScript Quickstart
-description: Create, check, build, and prepare to deploy a JamScript Service.
+description: Install JamScript, create a Service, build it, and deploy it to MiniJAM.
 ---
 
 # JamScript Quickstart
 
-This walkthrough creates a small counter Service, checks its ABI, builds a PVM artifact, and verifies the resulting bundle. The example intentionally uses the conservative executable subset supported by the selected release line.
+This walkthrough installs JamScript, creates a small Service, builds its PVM
+artifacts, and deploys it to a configured MiniJAM network.
 
-## 1. Install the CLI
+## 1. Install JamScript
 
-For a published release, install the **jams** CLI and its managed toolchain. See [Installation](./installation.md).
+```bash
+curl -fsSL https://install.minijam.xyz/jamscript | bash
+```
+
+Verify the managed toolchain:
+
+```bash
+jams --version
+jams toolchain verify
+```
+
+The installer also installs the matching native JamScript backend. See
+[Installation](./installation.md) for version pinning and platform details.
 
 ## 2. Create a project
 
-~~~bash
+```bash
 jams new hello-jam
 jams check hello-jam
 jams abi hello-jam
-~~~
+```
 
-The project includes a manifest, Service source, and a persistent Service identity file. Keep the identity with the project: regenerating it creates a different logical Service identity.
+The project contains the manifest, Service source, and persistent Service
+identity. Keep the identity with the project: regenerating it creates a
+different logical Service identity.
 
 ## 3. Add a counter Service
 
-~~~ts
+```ts
 import { action, wallet, stateMap, query, address, u32 } from "jam";
 
 const counters = stateMap({
@@ -45,43 +60,70 @@ export const increment = action({
 });
 
 export const getCounter = query(counters);
-~~~
+```
 
-Run checks again:
+Check the project again:
 
-~~~bash
+```bash
 jams check hello-jam
 jams abi hello-jam
-~~~
+```
 
-## 4. Build and validate
+## 4. Build and inspect
 
-Configure the management controller required by your selected release/project policy, then build:
-
-~~~bash
-jams build hello-jam --output hello-jam/dist --offline
+```bash
+jams build hello-jam --output hello-jam/dist
 jams inspect hello-jam/dist
 jams run hello-jam/dist/service.pvm
-~~~
+```
 
-**run** is a deterministic local PVM validation aid. It is not network deployment.
+`jams run` is a deterministic local PVM validation aid. It is not a network
+deployment command.
 
-## 5. Deploy explicitly
+After the managed toolchain is installed, add `--offline` to `jams build`
+when you want to forbid toolchain downloads.
 
-Deployment is a separate step. Configure a named MiniJAM network, inspect it, and deploy the already-built artifact:
+## 5. Configure MiniJAM
 
-~~~bash
-jams network list
-jams network show local
+Configure a named MiniJAM network in the project. For a local published network,
+see [Run MiniJAM locally with Docker](../../minijam/developers/local-docker.md).
+
+Inspect the selected network:
+
+```bash
+jams network list hello-jam
+jams network show local hello-jam
+```
+
+Use the endpoints and genesis identity supplied by the matching MiniJAM release;
+do not copy unrelated RPC values from an old tutorial.
+
+## 6. Start the backend
+
+In a separate terminal:
+
+```bash
+cd hello-jam
+jams backend start --network local
+```
+
+The backend installed by the JamScript installer is used automatically.
+
+## 7. Deploy
+
+```bash
 jams deploy hello-jam --network local --artifact hello-jam/dist
-~~~
+```
 
-Do not copy generic RPC ports blindly: use the endpoints and genesis identity supplied by the matching Stage-1/release environment.
+Building and deployment are separate operations. The built bundle remains
+network-independent; deployment selects the target network explicitly.
 
-Continue with [Deployment](../deployment/index.md), then use the [Backend](../backend/index.md) and [Client](../client/index.md) for application access.
+Continue with [Deployment](../deployment/index.md), [Backend](../backend/index.md),
+and [Client](../client/index.md).
 
 :::info Stage-0 Playground
 
-The historical browser Playground is no longer the default JamScript/MiniJAM development path. It is kept under the MiniJAM legacy documentation.
+The historical browser Playground is no longer the default JamScript/MiniJAM
+development path. Its documentation remains in the legacy section.
 
 :::

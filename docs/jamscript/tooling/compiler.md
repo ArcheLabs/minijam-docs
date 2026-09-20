@@ -5,7 +5,16 @@ description: Check, inspect, build, and locally run JamScript Service artifacts.
 
 # JamScript Compiler
 
-The public CLI is named `jams`.
+The public CLI is `jams`.
+
+Install it with:
+
+```bash
+curl -fsSL https://install.minijam.xyz/jamscript | bash
+```
+
+The installer also installs the managed compiler/toolchain and matching native
+backend.
 
 ## Everyday commands
 
@@ -17,25 +26,15 @@ The public CLI is named `jams`.
 | `jams build PATH --output dist` | Compile the Service and write a deployment bundle. |
 | `jams inspect dist` | Verify bundle checksums and print build metadata. |
 | `jams run dist/service.pvm` | Execute a local PVM validation run. |
-| `jams doctor` | Check canonical managed-toolchain readiness. |
+| `jams network list PATH` | List configured deployment networks. |
+| `jams network show NAME PATH` | Inspect a configured network. |
+| `jams deploy PATH --network NAME` | Deploy a built Service to a configured network. |
+| `jams backend start --network NAME` | Start the installed JamScript backend. |
 
-From a repository checkout, use the same commands through the built binary:
+`--output` defaults to `dist`. `check`, `abi`, and `build` default to the
+current directory when `PATH` is omitted.
 
-```bash
-cargo build --locked --bin jams
-./target/debug/jams new my-service
-./target/debug/jams check my-service
-./target/debug/jams abi my-service
-JAMSCRIPT_DEV_TOOLCHAIN=1 ./target/debug/jams build my-service --output my-service/dist
-./target/debug/jams inspect my-service/dist
-./target/debug/jams run my-service/dist/service.pvm
-```
-
-For a published release, install the managed bundle and use
-`jams build --offline`. `--output` defaults to `dist`; `check`, `abi`, and
-`build` default to the current directory when `PATH` is omitted.
-
-## Toolchain commands
+## Managed toolchain commands
 
 ```bash
 jams toolchain status
@@ -43,23 +42,50 @@ jams toolchain status --json
 jams toolchain install
 jams toolchain verify
 jams toolchain path
-jams doctor --json
 ```
 
-`doctor` is about canonical release builds. A source checkout with
-`JAMSCRIPT_DEV_TOOLCHAIN=1` can still be useful even when the current embedded
-distribution manifest is not published.
+Normal users do not need to install Rust, Node, LLVM, ScriptC, or PolkaVM
+separately. The release toolchain is managed by `jams`.
+
+After the toolchain is installed, `--offline` can be used to forbid toolchain
+downloads during a build:
+
+```bash
+jams build . --output dist --offline
+```
 
 ## What the build does
 
+At a high level:
+
 ```text
-TypeScript source → parser/TypeIr → ScriptC M2 C
-→ generated Rust runtime → Clang/LLVM + official PolkaVM linker
-→ JamV1 PVM and JAM blob
+JamScript source
+  ↓
+parser / typed IR
+  ↓
+ScriptC + generated guest runtime
+  ↓
+managed Rust / LLVM toolchain
+  ↓
+official PolkaVM linker
+  ↓
+service.pvm + service.blob + ABI/build metadata
 ```
 
-Language `0.2` requires `[compiler] backend = "scriptc"`. There is no legacy
-compiler fallback and no CLI flag for switching targets or optimization
-profiles. Diagnostics reject malformed manifests, unsupported source shape,
-unbounded ABI types, deterministic-profile violations, toolchain drift, and
-tampered output bundles.
+The release build is deterministic and verifies the managed toolchain and output
+bundle metadata.
+
+## Current performance boundary
+
+The current implementation deliberately builds on the mature PolkaVM toolchain.
+That provides a stable execution foundation, but also introduces efficiency
+overhead that can be reduced as JamScript-specific lowering and tooling mature.
+
+Ordinary numeric computation in the current ScriptC path can still use
+floating-point `number` representation internally in some paths. Fixed-width
+ABI types such as `u64` and `u128` remain explicit at Service boundaries.
+This internal numeric lowering is a preview limitation and is expected to be
+optimized before a stable release.
+
+See [Stability Policy](../reference/stability.md) for the current preview
+boundary.

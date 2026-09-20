@@ -5,7 +5,7 @@ description: 从源码到 query 理解一个小型有状态 JamScript Service。
 
 # 第一个 JamScript Service
 
-下面是当前 ScriptC M2 路径中一个最小但有用的有状态 Service：
+下面是当前已发布 JamScript 路径中的一个小型有状态 Service：
 
 ```ts
 import { action, wallet, stateMap, query, address, u32 } from "jam";
@@ -33,40 +33,43 @@ export const getCounter = query(counters);
 
 ## 读懂这个例子
 
-`stateMap` 声明一个经过认证的 map：key 是 `address`，value 是 `u32`。`schema`
-属于状态 identity 的一部分，应使用带版本的名字，后续不要悄悄改变它的含义。
+`stateMap` 声明经过认证的应用状态。这里 key 是 `address`，value 是 `u32`。
+`schema` 属于状态 identity 的一部分，应使用带版本的名字，后续不要悄悄改变含义。
 
-`wallet()` 表示 action 必须以 Formal `SignedActionV1` 到达。runtime 会在执行
-body 前检查 network domain、Service key、action selector、payload hash、sr25519
-签名、过期字段和 sender 的连续 nonce。`ctx.sender` 是已验证的 32-byte wallet
-address。
+`wallet()` 要求 action 带有 JamScript 认证。Runtime 会在 action body 执行前验证
+Ownership/controller proof，并通过执行上下文暴露已经验证的 sender。
 
-key 不存在时，`get` 返回 `null`。`set` 写入 transaction overlay；只有
-Refine/Accumulate transition 被接受后，修改才会持久化。如果 action 调用
-`abort(code)` 或执行失败，状态修改会回滚。
+key 不存在时，`get` 返回 `null`。`set` 写入当前 action 的事务状态视图；
+失败的 action 不会提交部分状态。
 
-`query(counters)` 发布一份 client 可读的 map 描述。query 不执行应用代码，也不
-修改状态。client 会读取 finalized managed-state root，验证目标 key 的 proof，
-最后才解码 value。
-
-## 为什么 action 没有 `return`
-
-当前 M2 Service runtime 使用 `executeOutput: unit`。这个示例的有效结果是状态
-transition，client 在 `getCounter` 中读取它。旧 counter 示例中的 return 表达式
-属于较早的 compiler 路径，不应在当前 `0.2` Service 中当作应用输出使用。
+`query(counters)` 发布 typed query 描述，Client 可以据此读取 finalized managed
+state。
 
 ## 构建
 
+如果还没有安装 JamScript：
+
 ```bash
-export JAMSCRIPT_DEV_TOOLCHAIN=1
-export JAMSCRIPT_DEPLOYER_ACCOUNT=0xYOUR_64_HEX_CHARACTER_PUBLIC_KEY
-./target/debug/jams check .
-./target/debug/jams abi .
-./target/debug/jams build . --output dist
+curl -fsSL https://install.minijam.xyz/jamscript | bash
 ```
 
-使用 release 流程时，把 `./target/debug/jams` 换成 `jams`，并在工具链安装后加上
-`--offline`。
+随后在项目目录中执行：
 
-继续阅读[状态](../language/state.md)、[类型与数据](../language/types-and-data.md)
-以及 [Refine 与 Accumulate](../runtime/refine-and-accumulate.md)。
+```bash
+jams check .
+jams abi .
+jams build . --output dist
+jams inspect dist
+```
+
+也可以在本地验证构建出的 PVM：
+
+```bash
+jams run dist/service.pvm
+```
+
+installer 已经提供托管 compiler/toolchain。正常应用开发不需要 checkout JamScript
+源码仓库。
+
+继续阅读[状态](../language/state.md)、[类型与数据](../language/types-and-data.md)和
+[部署](../deployment/index.md)。

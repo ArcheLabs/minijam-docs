@@ -9,7 +9,7 @@ JamScript Backend 是 typed Client 与 JAM-compatible network 之间的应用入
 
 它**不是** JAM/MiniJAM 共识的一部分，也**不是** Formal RPC。
 
-~~~text
+```text
 frontend / @jamscript/client
           │
           v
@@ -19,28 +19,57 @@ frontend / @jamscript/client
       │
       ├── Node / finalized Service state
       └── Formal RPC / Work path
-~~~
+```
+
+## 安装
+
+正常 JamScript installer 会把匹配的原生 Backend 与 CLI、托管工具链一起安装：
+
+```bash
+curl -fsSL https://install.minijam.xyz/jamscript | bash
+```
+
+项目和网络配置完成后：
+
+```bash
+jams backend start --network local
+```
+
+Backend 会以前台进程运行。仍可通过 `PATH` 或
+`JAMSCRIPT_BACKEND_BIN` 选择自定义安装的 Backend。
 
 ## 规范性规则
 
-对于已部署 Service，规范 managed-state head 是 finalized Service state 所 commitment 的 root。
+对于已部署 Service，canonical managed-state head 由 finalized Service state 选择。
 
-Backend 本地数据库与 trie 属于 availability/proof/execution materialization。在提供规范状态前，Backend 必须确认 durable head 与链选择的 commitment 一致。
-
-因此 Backend 不能通过“返回旧状态”让旧状态变成规范状态。
-
-## 一个 endpoint 不代表一个信任边界
-
-Frontend 便利查询可以默认使用 trusted-backend mode。
-
-但 Refine 仍会验证认证 state witness，Accumulate 仍会在提交 transition 前重新验证 canonical root。Client 也可以请求 proof-backed state query 进行独立验证。
+Backend 数据库和 trie 是用于应用访问与执行的本地 materialization，不会取代
+finalized chain state 成为规范性来源。
 
 ## 多 Service
 
-一个 Backend 进程可以服务多个 Service，但 mutable state 与 pending Work 必须按 Service 隔离。Service identity、code identity、state root 和 package/work key 不能跨 Service 混用。
+一个 Backend 进程可以服务多个 Service，但 mutable state、registry record 和
+pending Work 都保持 Service-scoped。
 
-## 运维
+当前 registry 还维护唯一的 `serviceKey -> serviceId` 映射。如果同一个 Backend
+数据库中某个 `serviceKey` 已经绑定 Service ID，再使用相同 `serviceKey`
+注册另一个不同 Service ID 会被拒绝。独立 Service 应使用独立的 Service identity。
 
-Release Backend 使用持久化存储，并提供 liveness/readiness endpoint。应把 data directory 视为 durable service state，不要把正在运行的数据库目录直接复制成“安全备份”。
+因此复用持久化 Backend 数据目录时要特别注意：删除或切换数据目录会得到一个新的
+Backend registry，这并不等于迁移了旧目录中的注册记录。
 
-精确实现契约与 RPC 名称请参阅 [JamScript Service Backend V1](https://github.com/ArcheLabs/JamScript/blob/main/docs/service-backend-v1.md)。
+## 持久化数据
+
+Release Backend 使用持久化存储。应把配置的数据目录视为 durable backend state。
+
+不要把正在运行的数据库目录直接复制成“安全备份”，也不要在正式环境中通过更换数据
+目录来绕过 registry 冲突。对于明确需要全新 registry 的本地测试，使用新的数据目录
+是合理的。
+
+## 信任边界
+
+Frontend 便利查询可以直接使用 Backend。Backend 是应用服务，不是共识本身。
+如果应用需要更强的独立验证，应使用匹配 JamScript Client/release 提供的
+proof/verification 路径。
+
+精确实现契约与 RPC 名称请参阅
+[JamScript Service Backend V1](https://github.com/ArcheLabs/JamScript/blob/main/docs/service-backend-v1.md)。

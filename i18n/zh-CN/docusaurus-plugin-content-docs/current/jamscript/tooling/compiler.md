@@ -7,6 +7,14 @@ description: 检查、查看、构建并在本地运行 JamScript Service artifa
 
 公共 CLI 名称是 `jams`。
 
+安装：
+
+```bash
+curl -fsSL https://install.minijam.xyz/jamscript | bash
+```
+
+installer 同时会安装托管 compiler/toolchain 与匹配的原生 Backend。
+
 ## 日常命令
 
 | 命令 | 作用 |
@@ -15,26 +23,17 @@ description: 检查、查看、构建并在本地运行 JamScript Service artifa
 | `jams check PATH` | 解析并校验 manifest 与 Service metadata。 |
 | `jams abi PATH` | 输出生成的 application ABI JSON。 |
 | `jams build PATH --output dist` | 编译 Service 并写入 deployment bundle。 |
-| `jams inspect dist` | 校验 bundle checksums 并打印 build metadata。 |
-| `jams run dist/service.pvm` | 执行一次本地 PVM validation。 |
-| `jams doctor` | 检查 canonical managed-toolchain 是否就绪。 |
+| `jams inspect dist` | 校验 bundle checksum 并打印 build metadata。 |
+| `jams run dist/service.pvm` | 执行本地 PVM validation。 |
+| `jams network list PATH` | 列出已配置的部署网络。 |
+| `jams network show NAME PATH` | 查看指定网络配置。 |
+| `jams deploy PATH --network NAME` | 将已构建 Service 部署到指定网络。 |
+| `jams backend start --network NAME` | 启动已安装的 JamScript Backend。 |
 
-从仓库 checkout 时，通过构建出的 binary 使用同样的命令：
+`--output` 默认是 `dist`；省略 `PATH` 时，`check`、`abi` 和 `build`
+默认使用当前目录。
 
-```bash
-cargo build --locked --bin jams
-./target/debug/jams new my-service
-./target/debug/jams check my-service
-./target/debug/jams abi my-service
-JAMSCRIPT_DEV_TOOLCHAIN=1 ./target/debug/jams build my-service --output my-service/dist
-./target/debug/jams inspect my-service/dist
-./target/debug/jams run my-service/dist/service.pvm
-```
-
-使用已发布版本时，先安装 managed bundle，再使用 `jams build --offline`。
-`--output` 默认是 `dist`；省略 `PATH` 时，`check`、`abi` 和 `build` 默认使用当前目录。
-
-## Toolchain 命令
+## 托管工具链命令
 
 ```bash
 jams toolchain status
@@ -42,21 +41,45 @@ jams toolchain status --json
 jams toolchain install
 jams toolchain verify
 jams toolchain path
-jams doctor --json
 ```
 
-`doctor` 面向 canonical release build。即使当前 embedded distribution manifest 尚未
-发布，设置 `JAMSCRIPT_DEV_TOOLCHAIN=1` 的 source checkout 仍然可以用于开发。
+普通用户无需另外安装 Rust、Node、LLVM、ScriptC 或 PolkaVM。Release toolchain 由
+`jams` 管理。
+
+工具链安装完成后，可以使用 `--offline` 禁止构建过程中下载工具链：
+
+```bash
+jams build . --output dist --offline
+```
 
 ## Build 做了什么
 
+高层流程：
+
 ```text
-TypeScript source → parser/TypeIr → ScriptC M2 C
-→ generated Rust runtime → Clang/LLVM + official PolkaVM linker
-→ JamV1 PVM 和 JAM blob
+JamScript source
+  ↓
+parser / typed IR
+  ↓
+ScriptC + generated guest runtime
+  ↓
+managed Rust / LLVM toolchain
+  ↓
+official PolkaVM linker
+  ↓
+service.pvm + service.blob + ABI/build metadata
 ```
 
-语言 `0.2` 要求 `[compiler] backend = "scriptc"`，没有 legacy compiler fallback，也
-没有用于切换 target 或 optimization profile 的 CLI flag。Diagnostics 会拒绝错误的
-manifest、unsupported source shape、无界 ABI 类型、determinism 违规、toolchain drift
-和被篡改的输出 bundle。
+Release build 是确定性的，并会验证托管工具链和输出 bundle metadata。
+
+## 当前性能边界
+
+当前实现有意建立在成熟的 PolkaVM 工具链之上。这提供了稳定的执行基础，但也带来
+一定效率损失。随着 JamScript-specific lowering 与工具链继续成熟，这部分开销会
+逐步降低。
+
+当前 ScriptC 路径中，部分普通数值计算在内部仍可能使用浮点 `number` 表示。
+Service 边界上的 `u64`、`u128` 等定宽 ABI 类型仍然是明确的，但内部 numeric
+lowering 尚处于 preview 阶段，正式版本前会继续优化。
+
+当前稳定性边界请参阅[稳定性策略](../reference/stability.md)。
