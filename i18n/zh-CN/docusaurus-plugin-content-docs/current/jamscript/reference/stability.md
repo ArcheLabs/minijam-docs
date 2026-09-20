@@ -5,26 +5,34 @@ description: JamScript 的稳定级别和 breaking change 预期。
 
 # JamScript 稳定性策略
 
-JamScript 当前是 developer preview。下面的标签说明今天哪些内容可以相对放心地
-依赖。
+JamScript v0.1 当前是 RC/testnet developer preview。
 
 | 级别 | 含义 | 当前示例 |
 |---|---|---|
-| Versioned protocol boundary | Wire 变化需要新的 versioned boundary | `SignedActionV1`、application ABI `1`、managed-state protocol/layout `1` |
-| Preview API | 可以使用，但源码或行为可能变化 | 语言 `0.2`、`jams` CLI、ScriptC M2、`jamscript.toml` |
-| Generated/internal | 不要依赖名称或 layout | Generated Rust/C、allocator layout、build staging file、host-call 细节 |
-| Experimental | Plumbing 已存在，但还未端到端支持 | Native C import、更宽的 M2 executable type surface |
+| Versioned protocol boundary | Wire 变化需要显式 versioned boundary | application ABI、managed-state format、signed/ownership action format |
+| Preview API | 可以使用，但源码或行为仍可能变化 | JamScript 语言表面、`jams` CLI、`jamscript.toml`、Backend/Client 便利 API |
+| Generated/internal | 不要依赖名称或 layout | generated guest code、allocator layout、build staging file、host-call 细节 |
+| Experimental | 已存在但仍在扩展或优化 | 更宽语言覆盖、numeric lowering、性能相关 compiler path |
 
-Formal V1 是首个受支持的 wire/runtime protocol；此前的开发代际不是兼容合同。
-源码兼容范围也窄于通用 TypeScript。
+需要可复现性时：
 
-面向类生产工作时：
-
-- 固定 JamScript CLI/toolchain release 和 source revision；
-- 在 artifact 记录中保留 `build.json` 与 `service.abi.json`；
+- 固定精确 JamScript release；
+- 验证托管工具链；
+- 把 `build.json` 与 `service.abi.json` 和 artifact record 一起保存；
 - 保持 Service identity 文件稳定；
 - 把 type/schema 变化当作 migration；
-- 除非在自己的精确 toolchain 中验证过，否则使用当前 M2 executable subset。
+- 针对实际部署的 MiniJAM/network release 运行端到端测试。
 
-Generated function name、heap size、register convention 和中间文件可以在不提升
+## 当前性能限制
+
+当前实现使用成熟的 PolkaVM 工具链。这提供了可靠的执行基础，但也带来一定效率损失；
+随着 JamScript-specific 工具链继续成熟，这部分开销预计会逐步下降。
+
+当前 ScriptC 路径中，部分普通数值计算在内部仍可能使用浮点 `number` 表示。
+Service 边界上的 `u64`、`u128` 等定宽 ABI 类型仍然是明确的，但内部 numeric
+lowering 尚未完全优化。
+
+当前 v0.1 原生 release 暂不支持 Windows。
+
+Generated function name、heap 细节、register convention 和中间文件可以在不提升
 language version 的情况下变化。

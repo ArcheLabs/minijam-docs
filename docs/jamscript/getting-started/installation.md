@@ -1,85 +1,139 @@
 ---
-title: Install the JamScript Toolchain
-description: Install the JamScript CLI and its reproducible compiler toolchain.
+title: Install JamScript
+description: Install the JamScript CLI, managed toolchain, and matching backend.
 ---
 
-# Install the JamScript Toolchain
+# Install JamScript
 
-There are two ways to work with JamScript:
+## Quick install
 
-1. Use a published CLI and its managed toolchain bundle for reproducible
-   builds.
-2. Build the CLI from the repository when working on JamScript itself or when
-   the matching release bundle is not published yet.
-
-Neither path needs a MiniJAM checkout for compilation. MiniJAM is a downstream
-network and compatibility check.
-
-## Recommended: managed toolchain bundle
-
-Download the `jams` CLI archive, the matching managed toolchain archive, and
-the release checksums from the same GitHub Release. Verify the downloaded
-checksums, then run:
+For normal development, use the official installer:
 
 ```bash
-./jams toolchain install
-./jams doctor
+curl -fsSL https://install.minijam.xyz/jamscript | bash
 ```
 
-The first command may download the exact bundle once. The bundle owns Node,
-ScriptC, Rust, Clang/LLVM, the PolkaVM linker, Cargo dependencies, and the JAM
-target SDK. A canonical build does not fall back to the host `node`, `rustc`,
-or `clang`.
+With no arguments, the installer selects the latest published JamScript release,
+including RC releases, and installs three matching components:
 
-After installation, builds can be completely offline:
+- `jams` — the JamScript CLI;
+- the managed compiler/toolchain used by `jams build`;
+- the native `jamscript-service-backend` from the matching backend release.
+
+The installer verifies the SHA-256 checksums published with the release before
+installing executables.
+
+The default binary directory is:
+
+```text
+~/.local/bin
+```
+
+If that directory is not already on `PATH`, the installer prints the command
+needed for the current shell.
+
+## Supported platforms
+
+The current v0.1 release line provides native release artifacts for:
+
+- Linux x86_64;
+- macOS Apple Silicon (arm64).
+
+Windows is not supported by the current release.
+
+## Verify the installation
 
 ```bash
-./jams build ./my-service --offline
+jams --version
+jams toolchain verify
 ```
 
-Use `JAMSCRIPT_TOOLCHAIN_HOME` to place the immutable bundle cache somewhere
-specific, such as a CI cache. `jams toolchain verify` checks the installed
-files again; `jams toolchain status --json` is convenient for CI diagnostics.
+The managed toolchain is installed by the bootstrap installer, so normal users
+do not need to install Rust, Cargo, Node, LLVM, ScriptC, or the PolkaVM linker
+separately.
 
-## Repository checkout: contributor mode
-
-This is the useful path for the current development tree:
+You can inspect the managed toolchain with:
 
 ```bash
-git clone https://github.com/ArcheLabs/JamScript.git
-cd JamScript
-npm --prefix toolchains/scriptc ci --ignore-scripts
-cargo build --locked --bin jams
-./target/debug/jams --version
+jams toolchain status
+jams toolchain status --json
+jams toolchain path
 ```
 
-The repository pins the required versions in `rust-toolchain.toml` and the
-toolchain manifest. The source build expects Rust
-`nightly-2026-05-02`, Node `24.15.0`, and Clang `20.1.8` on a Linux x86_64
-development host. Select the repository's compiler and target files explicitly:
+## Pin an exact release
+
+For reproducible development or CI, pin an immutable release tag:
 
 ```bash
-export JAMSCRIPT_DEV_TOOLCHAIN=1
-./target/debug/jams check examples/counter
+curl -fsSL https://install.minijam.xyz/jamscript \
+  | bash -s -- --version v0.1.0-rc.7
 ```
 
-Contributor artifacts are marked `canonical_toolchain: false` in `build.json`.
-They are useful for development, but they are not release artifacts.
+The installer resolves the matching backend release automatically. For the
+example above, that is `backend-v0.1.0-rc.7`.
 
-If Clang is not at `/usr/lib/llvm-20/bin/clang`, set
-`JAMSCRIPT_CLANG` to its absolute path. `JAMSCRIPT_LLVM_AR` and
-`JAMSCRIPT_READELF` are available for the corresponding tools when needed.
+A custom binary directory can be selected with:
 
-:::tip Check the environment before a long build
+```bash
+curl -fsSL https://install.minijam.xyz/jamscript \
+  | bash -s -- --bin-dir "$HOME/bin"
+```
 
-Run `./target/debug/jams check <project>` first, then `./target/debug/jams abi
-<project>`. These commands parse the project and generate metadata without
-building the PVM guest.
+## Start the backend
 
-:::
+For a project with a configured local MiniJAM network:
 
-## Platform note
+```bash
+jams backend start --network local
+```
 
-The published v0.1 distribution starts with Linux x86_64. Other platforms may
-be listed in the release manifest as pending or unsupported; do not assume a
-host platform is supported merely because the source checkout builds there.
+The backend runs in the foreground. The installer places the matching native
+backend next to `jams`, so Docker is not required for the normal JamScript
+development path.
+
+Custom backend binaries remain supported through `PATH` and
+`JAMSCRIPT_BACKEND_BIN`.
+
+## Offline builds
+
+After the managed toolchain has been installed, builds can be run without
+toolchain downloads:
+
+```bash
+jams build . --output dist --offline
+```
+
+`JAMSCRIPT_TOOLCHAIN_HOME` can be used to move the managed toolchain cache,
+for example into a CI cache directory.
+
+## Bootstrap requirements
+
+The installer needs Bash, curl, tar, gzip, awk, and either `sha256sum` or
+macOS `shasum`.
+
+It does **not** require:
+
+- a JamScript repository checkout;
+- a MiniJAM source checkout;
+- preinstalled Rust/Cargo;
+- preinstalled Node;
+- preinstalled LLVM/Clang;
+- Docker.
+
+## Manual installation
+
+If you do not want to pipe the installer into Bash:
+
+1. download the platform-specific JamScript CLI archive and `SHA256SUMS` from
+   the selected `v...` GitHub Release;
+2. download the platform-specific backend archive and `SHA256SUMS` from the
+   matching `backend-v...` Release;
+3. verify both checksums;
+4. install `jams` and `jamscript-service-backend` into a directory on
+   `PATH`;
+5. run `jams toolchain install` and `jams toolchain verify`.
+
+Source builds are intended for work on JamScript itself, not as the recommended
+application-development installation path.
+
+Continue with the [Quickstart](./quickstart.md).
