@@ -14,7 +14,7 @@ MINI is the base asset of the MiniJAM network and the Incentive Protocol. MINI's
 
 This document is a draft of MINI tokenomics.
 
-Fair distribution, MINI Lucky, and the early operations reserve will be finalized before launch. MINI holders will use governance to formally vote on the Root market launch, three-year incentive emissions, foundation budget, and long-term network economic model.
+Fair distribution, MINI Lucky, and the early operations reserve will be finalized before launch. MINI holders will use governance to formally vote on the Root market launch, long-term incentive emission framework, foundation budget, and long-term network economic model.
 
 :::
 
@@ -98,16 +98,11 @@ The initial LP is held by the protocol treasury. It is not a discretionary asset
 
 ## Incentive Protocol
 
-35% of the initial supply is allocated to the Incentive Protocol and released over three years:
+35% of the initial supply is reserved as a long-term incentive pool to support the continued development of the MiniJAM network and ecosystem.
 
-| Phase | Share of MINI total supply |
-| --- | --- |
-| Year 1 | 20% |
-| Year 2 | 10% |
-| Year 3 | 5% |
-| After three years | 0% |
+This MINI follows a long-term declining emission model. As cumulative emissions reach predefined thresholds, the base emission rate will be reduced in stages, including through halving, so that early network development receives stronger incentives while new circulating supply declines as the ecosystem matures.
 
-After three years, genesis incentive emissions stop. The Incentive Protocol will continue operating through trading fees, subprotocol fees, and other protocol revenue.
+The exact halving thresholds, emission cadence, and execution parameters are not fixed in the initial tokenomics. They will be defined by subsequent Incentive Protocol design and governance according to network development. The long-term emission plan defines only the overall release boundary of MINI; specific recipients, contribution evaluation, and allocation methods are defined by the relevant incentive mechanisms.
 
 ## Foundation
 
